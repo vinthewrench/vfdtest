@@ -129,7 +129,7 @@ bool WittyPi3::voltageIn(float &val){
 		&& _i2cWp.readByte(VOLTAGE_IN_I,registerBytes[0])
 		&& _i2cWp.readByte(VOLTAGE_IN_D,registerBytes[1]))
 	{
-		val = ((float)registerBytes[0]) + (registerBytes[1] * 0.01);
+		val = ((float)(registerBytes[0] & 0x7F) ) + (registerBytes[1] * 0.01);
 //		  printf("WittyPi3::voltageIn (%02x %02x) %2.2f\n",registerBytes[0],registerBytes[1] , val);
 		  success = true;
 	}
@@ -147,7 +147,7 @@ bool WittyPi3::voltageOut(float &val){
 		&& _i2cWp.readByte(VOLTAGE_OUT_I,registerBytes[0])
 		&& _i2cWp.readByte(VOLTAGE_OUT_D,registerBytes[1]))
 	{
-		val = ((float)registerBytes[0]) + (registerBytes[1] * 0.01);
+		val = ((float)(registerBytes[0] & 0x7F) ) + (registerBytes[1] * 0.01);
 //		printf("WittyPi3::voltageOut (%02x %02x) %2.2f\n",registerBytes[0],registerBytes[1] , val);
  		  success = true;
 	}
@@ -165,7 +165,7 @@ bool WittyPi3::currentOut(float &val){
 		&& _i2cWp.readByte(CURRENT_OUT_I,registerBytes[0])
 		&& _i2cWp.readByte(CURRENT_OUT_D,registerBytes[1]))
 	{
-		val = ((float)registerBytes[0]) + (registerBytes[1] * 0.01);
+		val = ((float)(registerBytes[0] & 0x7F) ) + (registerBytes[1] * 0.01);
 //		printf("WittyPi3::currentOut (%02x %02x) %2.2f\n",registerBytes[0],registerBytes[1] , val);
 		  success = true;
 	}
