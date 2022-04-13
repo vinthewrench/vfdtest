@@ -101,7 +101,7 @@ bool TMP117::readTempC(float& tempOut){
 		tempOut = finalTempC;
 		success = true;
 		
-		printf("readTempC %04x %2.2f\n",data.word, finalTempC);
+	//	printf("readTempC %04x %2.2f\n",data.word, finalTempC);
 	}
 	return success;
 }
