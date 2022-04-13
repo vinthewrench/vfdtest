@@ -47,7 +47,6 @@ int main(int argc, const char * argv[]) {
 		
 		if(!vfd.setBrightness(4))
 			throw Exception("failed to Set Brightness VFD ");
-	
 		
 		
 		while(true){
@@ -55,23 +54,27 @@ int main(int argc, const char * argv[]) {
 			auto t = std::time(nullptr);
 			auto tm = *std::localtime(&t);
 			float temp;
+			float vIn;
+			float iOut;
 			
 			tmp117.readTempF(temp);
+			pwr.voltageIn(vIn);
+			pwr.currentOut(iOut);
 			
 			string str;
 			
 			std::ostringstream oss;
-			oss <<  "\x10\x08\x25\x1E" <<  std::put_time(&tm, " %X");
-			oss <<  "\x10\x12\x35\x1D"  << round(temp)  << "\xA0" << "F";
+			oss <<  "\x10\x08\x10\x1E" <<  std::put_time(&tm, " %X");
+			oss <<  "\x10\x12\x20\x1D"  "Temp: " << round(temp)  << "\xA0" << "F";
+			oss <<  "\x10\x12\x30\x1D"  "In: " << std::fixed << std::setprecision(2)  << vIn  << "V ";
+			oss << std::fixed << std::setprecision(2)  << iOut  << "A";
 			str = oss.str();
-			//vfd.write(str);
 			
 			if(!vfd.write(str) ){
 				//    printf("failed write\n");
 				//  break;
 			}
 			
-			// usleep(100000);
 		}
 	 
 		

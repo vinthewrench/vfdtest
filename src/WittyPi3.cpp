@@ -80,7 +80,7 @@ void WittyPi3::stop(){
 }
 
 
-bool WittyPi3::tempC(double &val){
+bool WittyPi3::tempC(float &val){
 
 	bool success = false;
  
@@ -90,11 +90,11 @@ bool WittyPi3::tempC(double &val){
 	  uint16_t word ;
 	} data;
  
-	double digitalTemp;
+	float digitalTemp;
 	
 	if(_i2cClock.isAvailable() && _i2cClock.readWord(CLOCK_TEMP, data.word)){
 		
-		digitalTemp = ((double) (data.bytes[0] & 0x7F)) + ((data.bytes[1] >> 6) * 0.25);
+		digitalTemp = ((float) (data.bytes[0] & 0x7F)) + ((data.bytes[1] >> 6) * 0.25);
 		if((data.bytes[0] & 0x80)  == 0x80) digitalTemp = digitalTemp * -1;
 //		printf("WittyPi3::tempC %04x %2.2f\n",data.word, digitalTemp);
 		val = digitalTemp;
@@ -106,9 +106,9 @@ bool WittyPi3::tempC(double &val){
 }
 
 
-bool WittyPi3::tempF(double& tempOut){
+bool WittyPi3::tempF(float& tempOut){
 	
-	double cTemp;
+	float cTemp;
 	bool status = tempC(cTemp);
 	
 	if(status)
@@ -119,7 +119,7 @@ bool WittyPi3::tempF(double& tempOut){
 
 
 
-bool WittyPi3::voltageIn(double &val){
+bool WittyPi3::voltageIn(float &val){
 
 	bool success = false;
 	uint8_t registerBytes[2] = {0,0};
@@ -129,7 +129,7 @@ bool WittyPi3::voltageIn(double &val){
 		&& _i2cWp.readByte(VOLTAGE_IN_I,registerBytes[0])
 		&& _i2cWp.readByte(VOLTAGE_IN_D,registerBytes[1]))
 	{
-		val = ((double)registerBytes[0]) + (registerBytes[1] * 0.01);
+		val = ((float)registerBytes[0]) + (registerBytes[1] * 0.01);
 //		  printf("WittyPi3::voltageIn (%02x %02x) %2.2f\n",registerBytes[0],registerBytes[1] , val);
 		  success = true;
 	}
@@ -137,7 +137,7 @@ bool WittyPi3::voltageIn(double &val){
 	return success;
 }
 
-bool WittyPi3::voltageOut(double &val){
+bool WittyPi3::voltageOut(float &val){
 	
 	bool success = false;
 	uint8_t registerBytes[2] = {0,0};
@@ -147,7 +147,7 @@ bool WittyPi3::voltageOut(double &val){
 		&& _i2cWp.readByte(VOLTAGE_OUT_I,registerBytes[0])
 		&& _i2cWp.readByte(VOLTAGE_OUT_D,registerBytes[1]))
 	{
-		val = ((double)registerBytes[0]) + (registerBytes[1] * 0.01);
+		val = ((float)registerBytes[0]) + (registerBytes[1] * 0.01);
 //		printf("WittyPi3::voltageOut (%02x %02x) %2.2f\n",registerBytes[0],registerBytes[1] , val);
  		  success = true;
 	}
@@ -155,7 +155,7 @@ bool WittyPi3::voltageOut(double &val){
 	return success;
  }
 
-bool WittyPi3::currentOut(double &val){
+bool WittyPi3::currentOut(float &val){
 
 	bool success = false;
 	uint8_t registerBytes[2] = {0,0};
@@ -165,7 +165,7 @@ bool WittyPi3::currentOut(double &val){
 		&& _i2cWp.readByte(CURRENT_OUT_I,registerBytes[0])
 		&& _i2cWp.readByte(CURRENT_OUT_D,registerBytes[1]))
 	{
-		val = ((double)registerBytes[0]) + (registerBytes[1] * 0.01);
+		val = ((float)registerBytes[0]) + (registerBytes[1] * 0.01);
 //		printf("WittyPi3::currentOut (%02x %02x) %2.2f\n",registerBytes[0],registerBytes[1] , val);
 		  success = true;
 	}

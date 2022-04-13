@@ -46,13 +46,13 @@ public:
 
 	bool isConnected();
  	
-	bool voltageIn(double &val);
-	bool voltageOut(double &val);
-	bool currentOut(double &val);
+	bool voltageIn(float &val);
+	bool voltageOut(float &val);
+	bool currentOut(float &val);
 	bool powerMode(bool &val);
 	
-	bool  tempC(double &val);
-	bool  tempF(double &val);
+	bool  tempC(float &val);
+	bool  tempF(float &val);
 	
 
 private:
