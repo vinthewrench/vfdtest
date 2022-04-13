@@ -7,6 +7,7 @@
 #pragma once
 
 #include "I2C.hpp"
+#include <unistd.h>
 
 
 using namespace std;
@@ -27,7 +28,7 @@ public:
 
 private:
 	
-	bool writePacket(string str);
+	bool writePacket(string str, useconds_t waitusec = 0);
 
 	I2C 		_i2c;
 	bool		_isSetup;

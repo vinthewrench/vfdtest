@@ -45,7 +45,7 @@ void VFD::stop(){
 
 
 bool VFD::reset(){
-	return  writePacket( "\x19");
+	return  writePacket( "\x19", 500);
 }
 
 
@@ -55,7 +55,7 @@ bool VFD:: write(string str){
 }
 
 
-bool VFD:: writePacket(string str){
+bool VFD:: writePacket(string str, useconds_t waitusec){
 	
 	bool success = false;
 	I2C::i2c_block_t block;
@@ -89,6 +89,8 @@ bool VFD:: writePacket(string str){
 				if(!_i2c.writeByte(block[i]))
 					return false;
 			}
+			
+			if(waitusec) usleep (waitusec);
 			
 			// if we dont get a Success code, then try again
 			uint8_t reply = 0;
