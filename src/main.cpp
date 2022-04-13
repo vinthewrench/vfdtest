@@ -69,7 +69,7 @@ int main(int argc, const char * argv[]) {
 		
 			vfd.setCursor(10,25);
 			vfd.setFont(VFD::FONT_10x14);
-			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:S %P", t);
+			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S %P", t);
 			vfd.write(buffer);
 
 			vfd.setCursor(16, 40);
