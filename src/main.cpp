@@ -65,23 +65,23 @@ int main(int argc, const char * argv[]) {
 	
 			vfd.setCursor(16, 16);
 			vfd.setFont(VFD::FONT_10x14);
-			oss.clear(); oss << std::put_time(&tm, " %X");
+			oss.str(""); oss << std::put_time(&tm, " %X");
 			vfd.write(oss.str());
 	
 			vfd.setCursor(16, 40);
 			vfd.setFont(VFD::FONT_5x7);
-			oss.clear(); oss << "Temp: " << round(temp)  << "\xA0" << "F";
+			oss.str(""); oss << "Temp: " << round(temp)  << "\xA0" << "F";
 			vfd.write(oss.str());
 		
 			vfd.setCursor(16, 50);
 			vfd.setFont(VFD::FONT_5x7);
-			oss.clear(); oss << "Volts: " << std::fixed << std::setprecision(2)  << vIn  << "V ";
+			oss.str(""); oss << "Volts: " << std::fixed << std::setprecision(2)  << vIn  << "V ";
 			vfd.write(oss.str());
 	
 			
 			vfd.setCursor(64, 50);
 			vfd.setFont(VFD::FONT_5x7);
-			oss.clear(); oss << "Amps: " << std::fixed << std::setprecision(2)  << iOut  << "A ";
+			oss.str(""); oss << "Amps: " << std::fixed << std::setprecision(2)  << iOut  << "A ";
 			vfd.write(oss.str());
 		}
 	 
