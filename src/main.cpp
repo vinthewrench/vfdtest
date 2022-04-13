@@ -92,8 +92,8 @@ int main(int argc, const char * argv[]) {
 			
 			twist.isClicked(clicked);
 			if(clicked){
-				twist.setCount(0);
 				vfd.setBrightness(twistCount);
+				twist.setColor(0, twistCount << 5, 0);
 			}
 			
 			vfd.setCursor(10,25);
@@ -118,7 +118,7 @@ int main(int argc, const char * argv[]) {
 			
 			vfd.setCursor(10, 60);
 			vfd.setFont(VFD::FONT_5x7);
-			sprintf(buffer, "Twist: %-2d", twistCount);
+			sprintf(buffer, "bright: %-2d", twistCount);
 			vfd.write(buffer);
 
 //
