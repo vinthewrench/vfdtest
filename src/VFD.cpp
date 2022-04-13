@@ -70,8 +70,8 @@ bool VFD::setCursor(uint8_t x, uint8_t y){
 
 	switch(font) {
 		case FONT_MINI: 	buffer[0] = 0x1c; break;
-		case INS_5x7:	 	buffer[0] = 0x1d; break;
-		case INS_10x14:	buffer[0] = 0x1e; break;
+		case FONT_5x7:	 	buffer[0] = 0x1d; break;
+		case FONT_10x14:	buffer[0] = 0x1e; break;
 		default:
 			return false;
 	}
