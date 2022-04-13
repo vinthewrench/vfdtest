@@ -53,6 +53,9 @@ int main(int argc, const char * argv[]) {
 		if(!twist.setCount(0))
 			throw Exception("failed to set QwiicTwist count ");
  
+		if(!twist.setLimit(7))
+			throw Exception("failed to set QwiicTwist limit ");
+ 
 //		if(!in219.begin())
 //			throw Exception("failed to setup IN219 ");
 
@@ -86,8 +89,13 @@ int main(int argc, const char * argv[]) {
 			pwr.currentOut(iOut);
 	//		vBatt = in219.getBusVoltage_V();
 			twist.getCount(twistCount);
+			
 			twist.isClicked(clicked);
-	 
+			if(clicked){
+				twist.setCount(0);
+				vfd.setBrightness(twistCount);
+			}
+			
 			vfd.setCursor(10,25);
 			vfd.setFont(VFD::FONT_10x14);
 			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
@@ -110,7 +118,7 @@ int main(int argc, const char * argv[]) {
 			
 			vfd.setCursor(10, 60);
 			vfd.setFont(VFD::FONT_5x7);
-			sprintf(buffer, "Twist: %-2d %s ", twistCount, clicked?"C": " ");
+			sprintf(buffer, "Twist: %-2d", twistCount);
 			vfd.write(buffer);
 
 //
