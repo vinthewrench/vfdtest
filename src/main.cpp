@@ -71,11 +71,10 @@ int main(int argc, const char * argv[]) {
 			vfd.setFont(VFD::FONT_10x14);
 			std::strftime(buffer, sizeof(buffer)-1, "%l:%M %P", t);
 			vfd.write(buffer);
-			
- 
+
 			vfd.setCursor(16, 40);
 			vfd.setFont(VFD::FONT_5x7);
-			sprintf(buffer, "Temp: %d\x0A\x46", (int) round(temp) );
+			sprintf(buffer, "Temp: %d\xA0\x46", (int) round(temp) );
 			vfd.write(buffer);
 
 			vfd.setCursor(10, 50);
@@ -85,7 +84,7 @@ int main(int argc, const char * argv[]) {
  
 			vfd.setCursor(64, 50);
 			vfd.setFont(VFD::FONT_5x7);
-			sprintf(buffer, "%1.2fA", iOut);
+			sprintf(buffer, "AMPS: %1.2fA", iOut);
 			vfd.write(buffer);
  		}
 	 

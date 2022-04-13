@@ -47,7 +47,7 @@ void VFD::stop(){
 bool VFD::reset(){
 	
 	uint8_t buffer[] = {0x19};
-	return  writePacket(buffer, sizeof(buffer), 500);
+	return  writePacket(buffer, sizeof(buffer), 1000);
 }
 
 bool VFD::setBrightness(uint8_t level){
