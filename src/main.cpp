@@ -23,6 +23,7 @@
 #include "TMP117.hpp"
 #include "WittyPi3.hpp"
 #include "INA219.hpp"
+#include "QwiicTwist.hpp"
 
 int main(int argc, const char * argv[]) {
 	
@@ -31,6 +32,7 @@ int main(int argc, const char * argv[]) {
 	TMP117 	tmp117;
 	WittyPi3	pwr;
 	INA219	in219;
+	QwiicTwist	twist;
 	
 	
 	try {
@@ -41,6 +43,12 @@ int main(int argc, const char * argv[]) {
 		
 		if(!pwr.begin())
 			throw Exception("failed to setup WittyPi3 ");
+		
+		if(!twist.begin())
+			throw Exception("failed to setup QwiicTwist ");
+		
+		if(!twist.setColor(0, 128, 0)){
+			throw Exception("failed to set QwiicTwist color ");
 
 //		if(!in219.begin())
 //			throw Exception("failed to setup IN219 ");

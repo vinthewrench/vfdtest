@@ -260,3 +260,31 @@ bool I2C::readBlock(uint8_t regAddr, uint8_t size, i2c_block_t & block ){
 	
 	return true;
 }
+
+bool I2C::writeBlock(uint8_t regAddr, uint8_t size, i2c_block_t  block ){
+
+	if(!_isSetup) return false;
+
+	union i2c_smbus_data data;
+
+	memset(data.block, 0, sizeof(data.block));
+	
+	if (size > 32)
+		size = 32;
+	
+	for (int i = 1; i <= size; i++)
+		 data.block[i] = block[i-1];
+	data.block[0] = size;
+
+	if(i2c_smbus_access (_fd, I2C_SMBUS_WRITE, regAddr, I2C_SMBUS_I2C_BLOCK_DATA, &data) < 0){
+		
+		ELOG_ERROR(ErrorMgr::FAC_I2C, _devAddr, errno,  "I2C_SMBUS_WRITE BLOCK (%02x) ", regAddr);
+
+		return false;
+	}
+ 
+	return true;
+}
+
+
+ 

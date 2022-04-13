@@ -45,7 +45,8 @@ public:
 	bool readWord(uint8_t regAddr,  uint16_t& word);
 
 	bool readBlock(uint8_t regAddr, uint8_t size, i2c_block_t & block );
-		
+	bool writeBlock(uint8_t regAddr, uint8_t size, i2c_block_t block );
+
 private:
 
 	int 			_fd;

@@ -13,6 +13,7 @@ set(SOURCES
 	src/TMP117.cpp
 	src/INA219.cpp
 	src/WittyPi3.cpp
+	src/QwiicTwist.cpp
 	src/VFD.cpp
 	)
 
