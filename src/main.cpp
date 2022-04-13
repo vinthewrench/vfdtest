@@ -47,9 +47,12 @@ int main(int argc, const char * argv[]) {
 		if(!twist.begin())
 			throw Exception("failed to setup QwiicTwist ");
 		
-		if(!twist.setColor(0, 128, 0)){
+		if(!twist.setColor(0, 128, 0))
 			throw Exception("failed to set QwiicTwist color ");
-
+		
+		if(!twist.setCount(0))
+			throw Exception("failed to set QwiicTwist count ");
+ 
 //		if(!in219.begin())
 //			throw Exception("failed to setup IN219 ");
 
@@ -75,11 +78,13 @@ int main(int argc, const char * argv[]) {
 			float vIn;
 			float iOut;
 	//		float vBatt;
+			int16_t twistCount = 0;
 			
 			tmp117.readTempF(temp);
 			pwr.voltageOut(vIn);
 			pwr.currentOut(iOut);
 	//		vBatt = in219.getBusVoltage_V();
+			twist.getCount(twistCount);
 			 
 			
 			vfd.setCursor(10,25);
@@ -101,11 +106,18 @@ int main(int argc, const char * argv[]) {
 			vfd.setFont(VFD::FONT_5x7);
 			sprintf(buffer, "  %-2.2fA  ", iOut);
 			vfd.write(buffer);
+			
+			vfd.setCursor(10, 60);
+			vfd.setFont(VFD::FONT_5x7);
+			sprintf(buffer, "Twist: %d  ", twistCount);
+			vfd.write(buffer);
+
 //
 //			vfd.setCursor(10, 60);
 //			vfd.setFont(VFD::FONT_5x7);
 //			sprintf(buffer, "Batt: %-2.2fV", vBatt);
 //			vfd.write(buffer);
+		
 			
  		}
 		

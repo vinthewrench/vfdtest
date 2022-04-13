@@ -25,7 +25,6 @@ public:
  
 	uint8_t	getDevAddr();
  
-	
 	bool getCount(int16_t&);
 	bool setCount(int16_t);
 

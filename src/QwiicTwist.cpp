@@ -74,7 +74,11 @@ bool QwiicTwist::getCount(int16_t &val){
 	bool success = false;
 	
 	if(_i2cPort.isAvailable()){
-	  success = true;
+		uint16_t  word = 0;
+		if(_i2cPort.readWord(TWIST_COUNT, word)){
+			val = (int16_t) word;
+			success = true;
+		}
 	}
  
 	return success;
@@ -85,7 +89,8 @@ bool QwiicTwist::setCount(int16_t val){
 	bool success = false;
 	
 	if(_i2cPort.isAvailable()){
-	  success = true;
+	  success = _i2cPort.writeWord(TWIST_COUNT, val);
+
 	}
  
 	return success;
