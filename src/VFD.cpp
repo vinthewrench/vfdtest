@@ -47,7 +47,7 @@ void VFD::stop(){
 bool VFD::reset(){
 	
 	uint8_t buffer[] = {0x19};
-	return  writePacket(buffer, sizeof(buffer), 50);
+	return  writePacket(buffer, sizeof(buffer), 500);
 }
 
 
