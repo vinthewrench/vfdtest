@@ -42,6 +42,9 @@ void VFD::stop(){
 	_i2c.stop();
  }
 
+uint8_t	VFD::getDevAddr(){
+	return _i2c.getDevAddr();
+};
 
 
 bool VFD::reset(){

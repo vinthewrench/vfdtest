@@ -28,6 +28,7 @@ public:
   bool begin();		// alwsys uses a fixed address
   bool begin(int &error);
   void stop();
+	uint8_t	getDevAddr();
 
  	bool reset();
 

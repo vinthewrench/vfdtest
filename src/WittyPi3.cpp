@@ -80,6 +80,11 @@ void WittyPi3::stop(){
 }
 
 
+uint8_t	WittyPi3::getDevAddr(){
+	return _i2cWp.getDevAddr();
+};
+
+
 bool WittyPi3::tempC(float &val){
 
 	bool success = false;

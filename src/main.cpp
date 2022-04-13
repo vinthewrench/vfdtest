@@ -22,6 +22,7 @@
 #include "VFD.hpp"
 #include "TMP117.hpp"
 #include "WittyPi3.hpp"
+#include "INA219.hpp"
 
 int main(int argc, const char * argv[]) {
 	
@@ -29,6 +30,7 @@ int main(int argc, const char * argv[]) {
 	VFD 		vfd;
 	TMP117 	tmp117;
 	WittyPi3	pwr;
+	INA219	in219;
 	
 	
 	try {
@@ -39,7 +41,10 @@ int main(int argc, const char * argv[]) {
 		
 		if(!pwr.begin())
 			throw Exception("failed to setup WittyPi3 ");
-		
+
+		if(!in219.begin())
+			throw Exception("failed to setup IN219 ");
+
 		if(!vfd.begin())
 			throw Exception("failed to setup VFD ");
 		
@@ -61,11 +66,14 @@ int main(int argc, const char * argv[]) {
 			float temp;
 			float vIn;
 			float iOut;
+			float vBatt;
 			
 			tmp117.readTempF(temp);
 			pwr.voltageOut(vIn);
 			pwr.currentOut(iOut);
-		
+			vBatt = in219.getBusVoltage_V();
+			 
+			
 			vfd.setCursor(10,25);
 			vfd.setFont(VFD::FONT_10x14);
 			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
@@ -85,6 +93,12 @@ int main(int argc, const char * argv[]) {
 			vfd.setFont(VFD::FONT_5x7);
 			sprintf(buffer, "  %-2.2fA  ", iOut);
 			vfd.write(buffer);
+			
+			vfd.setCursor(10, 60);
+			vfd.setFont(VFD::FONT_5x7);
+			sprintf(buffer, "Batt: %-2.2fV", vBatt);
+			vfd.write(buffer);
+			
  		}
 		
 		vfd.stop();

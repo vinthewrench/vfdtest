@@ -13,6 +13,7 @@
 		2E62A8632807375300F5066B /* WittyPi3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A85F2807375300F5066B /* WittyPi3.cpp */; };
 		2E62A8662807383700F5066B /* ErrorMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A8642807383700F5066B /* ErrorMgr.cpp */; };
 		2E62A86A280738BA00F5066B /* VFD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A868280738BA00F5066B /* VFD.cpp */; };
+		2E62A86E280778E300F5066B /* INA219.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A86C2807766C00F5066B /* INA219.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,6 +43,8 @@
 		2E62A868280738BA00F5066B /* VFD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VFD.cpp; sourceTree = "<group>"; };
 		2E62A869280738BA00F5066B /* VFD.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VFD.hpp; sourceTree = "<group>"; };
 		2E62A86B28073C4300F5066B /* CommonDefs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CommonDefs.hpp; sourceTree = "<group>"; };
+		2E62A86C2807766C00F5066B /* INA219.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = INA219.cpp; sourceTree = "<group>"; };
+		2E62A86D2807766C00F5066B /* INA219.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = INA219.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +89,8 @@
 				2E62A8602807375300F5066B /* WittyPi3.hpp */,
 				2E62A868280738BA00F5066B /* VFD.cpp */,
 				2E62A869280738BA00F5066B /* VFD.hpp */,
+				2E62A86C2807766C00F5066B /* INA219.cpp */,
+				2E62A86D2807766C00F5066B /* INA219.hpp */,
 				2E62A86B28073C4300F5066B /* CommonDefs.hpp */,
 			);
 			path = src;
@@ -157,6 +162,7 @@
 			files = (
 				2E62A86A280738BA00F5066B /* VFD.cpp in Sources */,
 				2E62A8622807375300F5066B /* TMP117.cpp in Sources */,
+				2E62A86E280778E300F5066B /* INA219.cpp in Sources */,
 				2E62A8612807375300F5066B /* I2C.cpp in Sources */,
 				2E62A8662807383700F5066B /* ErrorMgr.cpp in Sources */,
 				2E62A8632807375300F5066B /* WittyPi3.cpp in Sources */,

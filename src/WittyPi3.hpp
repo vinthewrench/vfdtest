@@ -43,6 +43,7 @@ public:
 	bool begin();
 	bool begin(int &error);
 	void stop();
+	uint8_t	getDevAddr();
 
 	bool isConnected();
  	
@@ -57,8 +58,6 @@ public:
 
 private:
 
-
- 
 	I2C 		_i2cWp;
 	I2C 		_i2cClock;
 	
