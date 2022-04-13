@@ -50,15 +50,13 @@ bool VFD::reset(){
 	return  writePacket(buffer, sizeof(buffer), 500);
 }
 
-
 bool VFD::setBrightness(uint8_t level){
 	
 	level = level > 7?7:level;
-	level &= 0xF8;
+	level |= 0xF8;
 	uint8_t buffer[] = {0x1b, level};
 	
 	return  writePacket(buffer, sizeof(buffer), 50);
-	
 }
 
 
