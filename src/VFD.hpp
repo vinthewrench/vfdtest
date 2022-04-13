@@ -16,6 +16,12 @@ using namespace std;
 class VFD {
 public:
 
+	typedef enum  {
+		FONT_MINI = 0,
+		FONT_5x7 ,
+		FONT_10x14,
+ 	}font_t;
+
 	VFD();
   ~VFD();
 	
@@ -28,6 +34,9 @@ public:
 	bool write(string str);
 
 	bool setBrightness(uint8_t);  //  0 == off - 7 == max
+
+	bool setCursor(uint8_t x, uint8_t y); 
+	bool  setFont(font_t font);
 
 private:
 	

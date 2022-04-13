@@ -57,12 +57,6 @@ public:
 
 private:
 
-	typedef enum  {
-		INS_UNKNOWN = 0,
-		INS_IDLE ,
-		INS_INVALID,
-		INS_RESPONSE,
-	}in_state_t;
 
  
 	I2C 		_i2cWp;

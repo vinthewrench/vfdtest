@@ -59,10 +59,31 @@ bool VFD::setBrightness(uint8_t level){
 	return  writePacket(buffer, sizeof(buffer), 50);
 }
 
+bool VFD::setCursor(uint8_t x, uint8_t y){
+	uint8_t buffer[] = {0x10, x,y};
+
+	return  writePacket(buffer, sizeof(buffer), 50);
+}
+
+ bool  VFD::setFont(font_t font){
+	uint8_t buffer[] = {0x00};
+
+	switch(font) {
+		case FONT_MINI: 	buffer[0] = 0x1c; break;
+		case INS_5x7:	 	buffer[0] = 0x1d; break;
+		case INS_10x14:	buffer[0] = 0x1e; break;
+		default:
+			return false;
+	}
+	
+	return  writePacket(buffer, sizeof(buffer), 500);
+
+}
+
 
 bool VFD:: write(string str){
 	
-	return  writePacket( (uint8_t *) str.c_str(), str.size(), 50);
+	return  writePacket( (uint8_t *) str.c_str(), str.size(), 500);
 }
 
 

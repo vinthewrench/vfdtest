@@ -58,23 +58,31 @@ int main(int argc, const char * argv[]) {
 			float iOut;
 			
 			tmp117.readTempF(temp);
-			pwr.voltageIn(vIn);
+			pwr.voltageOut(vIn);
 			pwr.currentOut(iOut);
 			
-			string str;
-			
 			std::ostringstream oss;
-			oss <<  "\x10\x08\x10\x1E" <<  std::put_time(&tm, " %X");
-			oss <<  "\x10\x12\x20\x1D"  "Temp: " << round(temp)  << "\xA0" << "F";
-			oss <<  "\x10\x12\x30\x1D"  "In: " << std::fixed << std::setprecision(2)  << vIn  << "V ";
-			oss << std::fixed << std::setprecision(2)  << iOut  << "A";
-			str = oss.str();
+	
+			vfd.setCursor(16, 16);
+			vfd.setFont(VFD::FONT_10x14);
+			oss.clear(); oss << std::put_time(&tm, " %X");
+			vfd.write(oss.str());
+	
+			vfd.setCursor(16, 40);
+			vfd.setFont(VFD::FONT_5x7);
+			oss.clear(); oss << "Temp: " << round(temp)  << "\xA0" << "F";
+			vfd.write(oss.str());
+		
+			vfd.setCursor(16, 50);
+			vfd.setFont(VFD::FONT_5x7);
+			oss.clear(); oss << "Volts: " << std::fixed << std::setprecision(2)  << vIn  << "V ";
+			vfd.write(oss.str());
+	
 			
-			if(!vfd.write(str) ){
-				//    printf("failed write\n");
-				//  break;
-			}
-			
+			vfd.setCursor(64, 50);
+			vfd.setFont(VFD::FONT_5x7);
+			oss.clear(); oss << "Amps: " << std::fixed << std::setprecision(2)  << iOut  << "A ";
+			vfd.write(oss.str());
 		}
 	 
 		
