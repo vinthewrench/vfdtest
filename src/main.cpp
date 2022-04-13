@@ -79,14 +79,15 @@ int main(int argc, const char * argv[]) {
 			float iOut;
 	//		float vBatt;
 			int16_t twistCount = 0;
+			bool clicked = false;
 			
 			tmp117.readTempF(temp);
 			pwr.voltageOut(vIn);
 			pwr.currentOut(iOut);
 	//		vBatt = in219.getBusVoltage_V();
 			twist.getCount(twistCount);
-			 
-			
+			twist.isClicked(clicked);
+	 
 			vfd.setCursor(10,25);
 			vfd.setFont(VFD::FONT_10x14);
 			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
@@ -109,7 +110,7 @@ int main(int argc, const char * argv[]) {
 			
 			vfd.setCursor(10, 60);
 			vfd.setFont(VFD::FONT_5x7);
-			sprintf(buffer, "Twist: %d  ", twistCount);
+			sprintf(buffer, "Twist: %-2d %s ", twistCount, clicked?"C": " ");
 			vfd.write(buffer);
 
 //

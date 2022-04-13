@@ -33,6 +33,14 @@ enum encoderRegisters
   TWIST_LIMIT = 0x19,
 };
 
+constexpr uint8_t statusButtonClickedBit = 2;
+constexpr uint8_t statusButtonPressedBit = 1;
+constexpr uint8_t statusEncoderMovedBit = 0;
+
+constexpr uint8_t enableInterruptButtonBit = 1;
+constexpr uint8_t enableInterruptEncoderBit = 0;
+
+
 QwiicTwist::QwiicTwist(){
 	_isSetup = false;
 }
@@ -90,32 +98,31 @@ bool QwiicTwist::setCount(int16_t val){
 	
 	if(_i2cPort.isAvailable()){
 	  success = _i2cPort.writeWord(TWIST_COUNT, val);
-
 	}
  
 	return success;
 }
 
 
-bool QwiicTwist::getLimit(int16_t &val){
+bool QwiicTwist::getLimit(uint16_t &val){
 
 	bool success = false;
 	
 	if(_i2cPort.isAvailable()){
-	  success = true;
+		success = _i2cPort.readWord(TWIST_LIMIT, val);
 	}
  
 	return success;
 }
 
-bool QwiicTwist::setLimit(int16_t val){
+bool QwiicTwist::setLimit(uint16_t val){
 
 	bool success = false;
 	
-	if( _i2cPort.isAvailable()){
-	  success = true;
+	if(_i2cPort.isAvailable()){
+	  success = _i2cPort.writeWord(TWIST_LIMIT, val);
 	}
- 
+
 	return success;
 }
 
@@ -124,8 +131,15 @@ bool QwiicTwist::getDiff(int16_t &val, bool clearValue ){
 
 	bool success = false;
 	
-		if(_i2cPort.isAvailable()){
-	  success = true;
+	if(_i2cPort.isAvailable()){
+		uint16_t  word = 0;
+		if(_i2cPort.readWord(TWIST_DIFFERENCE, word)){
+			val = (int16_t) word;
+			
+			if (clearValue == true)
+				_i2cPort.writeWord(TWIST_DIFFERENCE, 0);
+			success = true;
+		}
 	}
  
 	return success;
@@ -136,8 +150,15 @@ bool QwiicTwist::isPressed(bool& val){
 
 	bool success = false;
 	
-		if(_i2cPort.isAvailable()){
-	  success = true;
+	if(_i2cPort.isAvailable()){
+		uint8_t status = 0;
+		if(_i2cPort.readByte(TWIST_STATUS, status)){
+			val = status & (1 << statusButtonPressedBit);
+			
+			_i2cPort.writeByte(TWIST_STATUS,  status & ~(1 << statusButtonPressedBit));
+		}
+
+		success = true;
 	}
  
 	return success;
@@ -147,8 +168,15 @@ bool QwiicTwist::isClicked(bool& val){
 
 	bool success = false;
 	
-		if(_i2cPort.isAvailable()){
-	  success = true;
+	if(_i2cPort.isAvailable()){
+		uint8_t status = 0;
+		if(_i2cPort.readByte(TWIST_STATUS, status)){
+			val = status & (1 << statusButtonClickedBit);
+			
+			_i2cPort.writeByte(TWIST_STATUS,  status & ~(1 << statusButtonClickedBit));
+		}
+
+		success = true;
 	}
  
 	return success;
@@ -158,31 +186,45 @@ bool QwiicTwist::isMoved(bool& val){
 
 	bool success = false;
 	
-		if(_i2cPort.isAvailable()){
-	  success = true;
+	if(_i2cPort.isAvailable()){
+		uint8_t status = 0;
+		if(_i2cPort.readByte(TWIST_STATUS, status)){
+			val = status & (1 << statusEncoderMovedBit);
+			_i2cPort.writeByte(TWIST_STATUS,  status & ~(1 << statusEncoderMovedBit));
+		}
+
+		success = true;
 	}
  
 	return success;
 }
 
 
-bool QwiicTwist::timeSinceLastMovement(int16_t &val, bool clearValue ){
+bool QwiicTwist::timeSinceLastMovement(uint16_t &val, bool clearValue ){
 
 	bool success = false;
 	
-		if(_i2cPort.isAvailable()){
-	  success = true;
+	if(_i2cPort.isAvailable()){
+		success = _i2cPort.readWord(TWIST_LAST_ENCODER_EVENT, val);
+		
+		if (clearValue == true)
+			_i2cPort.writeWord(TWIST_LAST_ENCODER_EVENT, 0);
+
 	}
  
 	return success;
 }
 
-bool QwiicTwist::timeSinceLastPress(int16_t &val, bool clearValue ){
+bool QwiicTwist::timeSinceLastPress(uint16_t &val, bool clearValue ){
 
 	bool success = false;
 	
-		if(_i2cPort.isAvailable()){
-	  success = true;
+	if(_i2cPort.isAvailable()){
+		success = _i2cPort.readWord(TWIST_LAST_BUTTON_EVENT, val);
+		
+		if (clearValue == true)
+			_i2cPort.writeWord(TWIST_LAST_BUTTON_EVENT, 0);
+
 	}
  
 	return success;
