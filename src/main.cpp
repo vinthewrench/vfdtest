@@ -67,9 +67,9 @@ int main(int argc, const char * argv[]) {
 			pwr.currentOut(iOut);
 			
 		
-			vfd.setCursor(16,25);
+			vfd.setCursor(10,25);
 			vfd.setFont(VFD::FONT_10x14);
-			std::strftime(buffer, sizeof(buffer)-1, "%l:%M %P", t);
+			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:S %P", t);
 			vfd.write(buffer);
 
 			vfd.setCursor(16, 40);
@@ -82,9 +82,9 @@ int main(int argc, const char * argv[]) {
 			sprintf(buffer, "Pwr: %-2.2fV", vIn);
 			vfd.write(buffer);
  
-			vfd.setCursor(64, 50);
+			vfd.setCursor(70, 50);
 			vfd.setFont(VFD::FONT_5x7);
-			sprintf(buffer, " %-2.2fA  ", iOut);
+			sprintf(buffer, "  %-2.2fA  ", iOut);
 			vfd.write(buffer);
  		}
 	 
