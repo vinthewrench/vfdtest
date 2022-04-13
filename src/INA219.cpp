@@ -158,7 +158,6 @@ uint8_t	INA219::getDevAddr(){
 };
 
 
-
 /*!
  *  @brief  Set power save mode according to parameters
  *  @param  on
