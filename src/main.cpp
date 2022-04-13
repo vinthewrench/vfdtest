@@ -19,22 +19,22 @@
 #include "CommonDefs.hpp"
 
 #include "VFD.hpp"
-#include "TMP102.hpp"
+#include "TMP117.hpp"
 #include "WittyPi3.hpp"
 
 int main(int argc, const char * argv[]) {
 	
 	
 	VFD 		vfd;
-	TMP102 	tmp102;
+	TMP117 	tmp117;
 	WittyPi3	pwr;
 	
 	
 	try {
 		printf("Test start\n");
 		
-		if(!tmp102.begin())
-			throw Exception("failed to setup tmp102 ");
+		if(!tmp117.begin())
+			throw Exception("failed to setup TMP117 ");
 		
 		if(!pwr.begin())
 			throw Exception("failed to setup WittyPi3 ");
@@ -51,7 +51,7 @@ int main(int argc, const char * argv[]) {
 			auto tm = *std::localtime(&t);
 			float temp;
 			
-			tmp102.readTempF(temp);
+			tmp117.readTempF(temp);
 			
 			string str;
 			

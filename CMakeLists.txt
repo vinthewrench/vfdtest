@@ -10,7 +10,7 @@ set(SOURCES
 	src/main.cpp
 	src/ErrorMgr.cpp
 	src/I2C.cpp
-	src/TMP102.cpp
+	src/TMP117.cpp
 	src/WittyPi3.cpp
 	src/VFD.cpp
 	)

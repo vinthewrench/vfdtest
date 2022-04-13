@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		2E62A852280735DA00F5066B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A851280735DA00F5066B /* main.cpp */; };
 		2E62A8612807375300F5066B /* I2C.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A85B2807375300F5066B /* I2C.cpp */; };
-		2E62A8622807375300F5066B /* TMP102.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A85D2807375300F5066B /* TMP102.cpp */; };
+		2E62A8622807375300F5066B /* TMP117.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A85D2807375300F5066B /* TMP117.cpp */; };
 		2E62A8632807375300F5066B /* WittyPi3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A85F2807375300F5066B /* WittyPi3.cpp */; };
 		2E62A8662807383700F5066B /* ErrorMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A8642807383700F5066B /* ErrorMgr.cpp */; };
 		2E62A86A280738BA00F5066B /* VFD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A868280738BA00F5066B /* VFD.cpp */; };
@@ -33,8 +33,8 @@
 		2E62A8592807364F00F5066B /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		2E62A85B2807375300F5066B /* I2C.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = I2C.cpp; sourceTree = "<group>"; };
 		2E62A85C2807375300F5066B /* I2C.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = I2C.hpp; sourceTree = "<group>"; };
-		2E62A85D2807375300F5066B /* TMP102.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TMP102.cpp; sourceTree = "<group>"; };
-		2E62A85E2807375300F5066B /* TMP102.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TMP102.hpp; sourceTree = "<group>"; };
+		2E62A85D2807375300F5066B /* TMP117.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TMP117.cpp; sourceTree = "<group>"; };
+		2E62A85E2807375300F5066B /* TMP117.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TMP117.hpp; sourceTree = "<group>"; };
 		2E62A85F2807375300F5066B /* WittyPi3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WittyPi3.cpp; sourceTree = "<group>"; };
 		2E62A8602807375300F5066B /* WittyPi3.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WittyPi3.hpp; sourceTree = "<group>"; };
 		2E62A8642807383700F5066B /* ErrorMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ErrorMgr.cpp; sourceTree = "<group>"; };
@@ -80,8 +80,8 @@
 				2E62A8652807383700F5066B /* ErrorMgr.hpp */,
 				2E62A85B2807375300F5066B /* I2C.cpp */,
 				2E62A85C2807375300F5066B /* I2C.hpp */,
-				2E62A85D2807375300F5066B /* TMP102.cpp */,
-				2E62A85E2807375300F5066B /* TMP102.hpp */,
+				2E62A85D2807375300F5066B /* TMP117.cpp */,
+				2E62A85E2807375300F5066B /* TMP117.hpp */,
 				2E62A85F2807375300F5066B /* WittyPi3.cpp */,
 				2E62A8602807375300F5066B /* WittyPi3.hpp */,
 				2E62A868280738BA00F5066B /* VFD.cpp */,
@@ -156,7 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E62A86A280738BA00F5066B /* VFD.cpp in Sources */,
-				2E62A8622807375300F5066B /* TMP102.cpp in Sources */,
+				2E62A8622807375300F5066B /* TMP117.cpp in Sources */,
 				2E62A8612807375300F5066B /* I2C.cpp in Sources */,
 				2E62A8662807383700F5066B /* ErrorMgr.cpp in Sources */,
 				2E62A8632807375300F5066B /* WittyPi3.cpp in Sources */,

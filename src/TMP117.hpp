@@ -5,12 +5,12 @@
 
 using namespace std;
 
-class TMP102
+class TMP117
 {
  
 public:
-	TMP102();
-	~TMP102();
+	TMP117();
+	~TMP117();
  
 	// Address of Temperature sensor (0x48,0x49,0x4A,0x4B)
  
