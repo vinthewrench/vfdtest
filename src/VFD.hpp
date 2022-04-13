@@ -32,6 +32,7 @@ public:
  	bool reset();
 
 	bool write(string str);
+	bool write(const char* str);
 
 	bool setBrightness(uint8_t);  //  0 == off - 7 == max
 

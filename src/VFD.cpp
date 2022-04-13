@@ -80,6 +80,11 @@ bool VFD::setCursor(uint8_t x, uint8_t y){
 
 }
 
+bool VFD::write(const char* str){
+	return  writePacket( (uint8_t *) str, strlen(str), 500);
+
+	
+}
 
 bool VFD:: write(string str){
 	

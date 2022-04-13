@@ -15,6 +15,7 @@
 #include <ctime>
 #include <cmath>
 #include <iomanip>
+#include <time.h>
 
 #include "CommonDefs.hpp"
 
@@ -51,8 +52,12 @@ int main(int argc, const char * argv[]) {
 		
 		while(true){
 			
-			auto t = std::time(nullptr);
-			auto tm = *std::localtime(&t);
+			char buffer[128] = {0};
+		 
+			time_t now = time(NULL);
+			struct tm *t = localtime(&now);
+		
+			
 			float temp;
 			float vIn;
 			float iOut;
@@ -61,29 +66,28 @@ int main(int argc, const char * argv[]) {
 			pwr.voltageOut(vIn);
 			pwr.currentOut(iOut);
 			
-			std::ostringstream oss;
-	
-			vfd.setCursor(16, 16);
+		
+			vfd.setCursor(16,25);
 			vfd.setFont(VFD::FONT_10x14);
-			oss.str(""); oss << std::put_time(&tm, " %X");
-			vfd.write(oss.str());
-	
+			std::strftime(buffer, sizeof(buffer)-1, "%l:%M %P", t);
+			vfd.write(buffer);
+			
+ 
 			vfd.setCursor(16, 40);
 			vfd.setFont(VFD::FONT_5x7);
-			oss.str(""); oss << "Temp: " << round(temp)  << "\xA0" << "F";
-			vfd.write(oss.str());
-		
+			sprintf(buffer, "Temp: %d \x0A\x46", (int) round(temp) );
+			vfd.write(buffer);
+
 			vfd.setCursor(16, 50);
 			vfd.setFont(VFD::FONT_5x7);
-			oss.str(""); oss << "Volts: " << std::fixed << std::setprecision(2)  << vIn  << "V ";
-			vfd.write(oss.str());
-	
-			
+			sprintf(buffer, "Volts: %1.2fV", vIn);
+			vfd.write(buffer);
+ 
 			vfd.setCursor(64, 50);
 			vfd.setFont(VFD::FONT_5x7);
-			oss.str(""); oss << "Amps: " << std::fixed << std::setprecision(2)  << iOut  << "A ";
-			vfd.write(oss.str());
-		}
+			sprintf(buffer, "Amps: %1.2fA", iOut);
+			vfd.write(buffer);
+ 		}
 	 
 		
 		vfd.stop();
