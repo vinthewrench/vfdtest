@@ -7,6 +7,7 @@
 #pragma once
 
 #include "I2C.hpp"
+#include  <stddef.h>
 #include <unistd.h>
 
 
@@ -26,9 +27,11 @@ public:
 
 	bool write(string str);
 
+	bool setBrightness(uint8_t);  //  0 == off - 7 == max
+
 private:
 	
-	bool writePacket(string str, useconds_t waitusec = 0);
+	bool writePacket(const uint8_t *data , size_t len , useconds_t waitusec = 50);
 
 	I2C 		_i2c;
 	bool		_isSetup;

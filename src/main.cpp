@@ -45,6 +45,11 @@ int main(int argc, const char * argv[]) {
 		if(!vfd.reset())
 			throw Exception("failed to RESET VFD ");
 		
+		if(!vfd.setBrightness(4))
+			throw Exception("failed to Set Brightness VFD ");
+	
+		
+		
 		while(true){
 			
 			auto t = std::time(nullptr);

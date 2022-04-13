@@ -45,26 +45,37 @@ void VFD::stop(){
 
 
 bool VFD::reset(){
-	return  writePacket( "\x19", 500);
+	
+	uint8_t buffer[] = {0x19};
+	return  writePacket(buffer, sizeof(buffer), 50);
 }
 
+
+bool VFD::setBrightness(uint8_t level){
+	
+	level = level > 7?7:level;
+	level &= 0xF8;
+	uint8_t buffer[] = {0x1b, level};
+	
+	return  writePacket(buffer, sizeof(buffer), 50);
+	
+}
 
 
 bool VFD:: write(string str){
-	return  writePacket( str);
+	
+	return  writePacket( (uint8_t *) str.c_str(), str.size(), 50);
 }
 
 
-bool VFD:: writePacket(string str, useconds_t waitusec){
+bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 	
 	bool success = false;
 	I2C::i2c_block_t block;
 	
 	if(!_isSetup) return false;
 	
-	auto bytesLeft = str.size();
-	const char* data = str.c_str();
- 
+	size_t bytesLeft = len;
 	while(bytesLeft > 0) {
 		
 		uint8_t len = bytesLeft < 28?bytesLeft:28;
