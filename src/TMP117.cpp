@@ -92,13 +92,16 @@ bool TMP117::readTempC(float& tempOut){
  
 	if(_i2cPort.readWord(TMP117_TEMP_RESULT, data.word)){
 		
-		float finalTempC = data.word * TMP117_RESOLUTION; // Multiplies by the resolution for digital to final temp
+		int16_t digitalTemp;
 
-			
+		digitalTemp = ((data.bytes[0]) << 8) | (data.bytes[1] );
+
+		float finalTempC = digitalTemp * TMP117_RESOLUTION; // Multiplies by the resolution for digital to final temp
+ 
 		tempOut = finalTempC;
 		success = true;
 		
-	// printf("readTempC %04x  %04x  %2.2f\n",data.word, digitalTemp ,tempOut);
+		printf("readTempC %04x %2.2f\n",data.word, finalTempC);
 	}
 	return success;
 }
