@@ -97,8 +97,8 @@ int main(int argc, const char * argv[]) {
 			
 			vfd.setCursor(10,14);
 			vfd.setFont(VFD::FONT_10x14);
-	//		std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
-			std::strftime(buffer, sizeof(buffer)-1, "%H:%M:%S%P", t);
+	 		std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
+//			std::strftime(buffer, sizeof(buffer)-1, "%H:%M:%S%P", t);
 			vfd.write(buffer);
 			usleep(100);
 			
@@ -114,7 +114,7 @@ int main(int argc, const char * argv[]) {
 			vfd.write(buffer);
 			usleep(100);
 
-			vfd.setCursor(70, 45);
+			vfd.setCursor(70, 35);
 			vfd.setFont(VFD::FONT_5x7);
 			sprintf(buffer, "  %-2.2fA  ", iOut);
 			vfd.write(buffer);
@@ -122,7 +122,7 @@ int main(int argc, const char * argv[]) {
 
 			vfd.setCursor(10, 45);
 			vfd.setFont(VFD::FONT_5x7);
-			sprintf(buffer, "bright: %-2d", twistCount);
+			sprintf(buffer, "Dim: %-2d", twistCount);
 			vfd.write(buffer);
 			usleep(100);
 
