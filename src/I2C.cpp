@@ -169,12 +169,19 @@ bool I2C::writeByte(uint8_t regAddr, uint8_t b1){
 }
 
 
-bool I2C::writeWord(uint8_t regAddr, uint16_t word){
+bool I2C::writeWord(uint8_t regAddr, uint16_t word,bool swap ){
 
 	if(!_isSetup) return false;
 
-	union i2c_smbus_data data = {.word = word};
- 
+	union i2c_smbus_data data;
+	
+	if(swap){
+		data.word =((word << 8) & 0xff00) | ((word >> 8) & 0x00ff);
+	}
+	else {
+		data.word = word;
+	}
+
 	if(i2c_smbus_access (_fd, I2C_SMBUS_WRITE, regAddr, I2C_SMBUS_WORD_DATA, &data) < 0){
 		
 		ELOG_ERROR(ErrorMgr::FAC_I2C, _devAddr, errno,  "I2C_SMBUS_WRITE WORD (%02x) ", regAddr);
@@ -221,7 +228,7 @@ bool I2C::readByte(uint8_t regAddr,  uint8_t& byte){
 	return true;
 }
 
-bool I2C::readWord(uint8_t regAddr,  uint16_t& word){
+bool I2C::readWord(uint8_t regAddr,  uint16_t& word, bool swap){
 
 	if(!_isSetup) return false;
 
@@ -234,7 +241,12 @@ bool I2C::readWord(uint8_t regAddr,  uint16_t& word){
 		return false;
 	}
 
-	word = data.word & 0xFFFF; 
+	if(swap){
+		word = ((data.block[0]) << 8) | (data.block[1] );
+	}
+	else {
+		word = data.word;
+	}
 	return true;
 }
  

@@ -38,11 +38,11 @@ public:
 	bool writeByte(uint8_t byte);		// simple 1 byte write
 
 	bool writeByte(uint8_t regAddr, uint8_t byte);
-	bool writeWord(uint8_t regAddr, uint16_t word);
+	bool writeWord(uint8_t regAddr, uint16_t word, bool swap = false));
 
 	bool readByte(uint8_t& byte);	// simple 1 byte read
 	bool readByte(uint8_t regAddr,  uint8_t& byte);
-	bool readWord(uint8_t regAddr,  uint16_t& word);
+	bool readWord(uint8_t regAddr,  uint16_t& word, bool swap = false);
 
 	bool readBlock(uint8_t regAddr, uint8_t size, i2c_block_t & block );
 	bool writeBlock(uint8_t regAddr, uint8_t size, i2c_block_t block );
