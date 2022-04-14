@@ -153,7 +153,8 @@ int main(int argc, const char * argv[]) {
 			if(twist.isClicked(clicked) && clicked) break;
 			
 		}
-		
+		vfd.reset();
+		vfd.reset();
 		vfd.stop();
 	 
 	}
