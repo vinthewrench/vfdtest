@@ -90,7 +90,8 @@ int main(int argc, const char * argv[]) {
 			float iOut;
 	//		float vBatt;
 			bool moved = false;
-			
+			bool clicked = false;
+	
 			tmp117.readTempF(temp);
 			pwr.voltageOut(vIn);
 			pwr.currentOut(iOut);
@@ -149,6 +150,7 @@ int main(int argc, const char * argv[]) {
 //			sprintf(buffer, "Batt: %-2.2fV", vBatt);
 //			vfd.write(buffer);
 		
+			if(twist.isClicked(clicked) && clicked) break;
 			
 		}
 		
