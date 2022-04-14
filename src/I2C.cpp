@@ -169,7 +169,7 @@ bool I2C::writeByte(uint8_t regAddr, uint8_t b1){
 }
 
 
-bool I2C::writeWord(uint8_t regAddr, uint16_t word,bool swap ){
+bool I2C::writeWord(uint8_t regAddr, uint16_t word, bool swap ){
 
 	if(!_isSetup) return false;
 

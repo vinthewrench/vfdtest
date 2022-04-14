@@ -38,7 +38,7 @@ public:
 	bool writeByte(uint8_t byte);		// simple 1 byte write
 
 	bool writeByte(uint8_t regAddr, uint8_t byte);
-	bool writeWord(uint8_t regAddr, uint16_t word, bool swap = false));
+	bool writeWord(uint8_t regAddr, uint16_t word, bool swap = false);
 
 	bool readByte(uint8_t& byte);	// simple 1 byte read
 	bool readByte(uint8_t regAddr,  uint8_t& byte);
