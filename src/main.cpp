@@ -96,31 +96,31 @@ int main(int argc, const char * argv[]) {
 				twist.setColor(0, twistCount << 5, 0);
 			}
 			
-			vfd.setCursor(10,25);
+			vfd.setCursor(5,0);
 			vfd.setFont(VFD::FONT_10x14);
 			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
 			vfd.write(buffer);
 			usleep(100);
 			
-			vfd.setCursor(16, 40);
+			vfd.setCursor(10, 15);
 			vfd.setFont(VFD::FONT_5x7);
 			sprintf(buffer, "Temp: %d\xA0\x46", (int) round(temp) );
 			vfd.write(buffer);
 			usleep(100);
 
-			vfd.setCursor(10, 50);
+			vfd.setCursor(10, 25);
 			vfd.setFont(VFD::FONT_5x7);
 			sprintf(buffer, "Pwr: %-2.2fV", vIn);
 			vfd.write(buffer);
 			usleep(100);
 
-			vfd.setCursor(70, 50);
+			vfd.setCursor(70, 25);
 			vfd.setFont(VFD::FONT_5x7);
 			sprintf(buffer, "  %-2.2fA  ", iOut);
 			vfd.write(buffer);
 			usleep(100);
 
-			vfd.setCursor(10, 60);
+			vfd.setCursor(10, 35);
 			vfd.setFont(VFD::FONT_5x7);
 			sprintf(buffer, "bright: %-2d", twistCount);
 			vfd.write(buffer);
