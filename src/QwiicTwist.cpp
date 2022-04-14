@@ -84,8 +84,10 @@ bool QwiicTwist::getCount(int16_t &val){
 	if(_i2cPort.isAvailable()){
 		uint16_t  word = 0;
 		if(_i2cPort.readWord(TWIST_COUNT, word)){
-			val = (int16_t) word;
-			success = true;
+			if(word != UINT16_MAX){
+				val = (int16_t) word;
+				success = true;
+			}
 		}
 	}
  

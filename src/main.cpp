@@ -34,9 +34,9 @@ int main(int argc, const char * argv[]) {
 	INA219	in219;
 	QwiicTwist	twist;
 	
-	
 	try {
-		 int16_t twistCount = 4;
+		uint8_t dimLevel = 4;
+		
 		printf("Test start\n");
 		
 		if(!tmp117.begin())
@@ -53,10 +53,7 @@ int main(int argc, const char * argv[]) {
 		
 		if(!twist.setCount(0))
 			throw Exception("failed to set QwiicTwist count ");
- 
-		if(!twist.setLimit(7))
-			throw Exception("failed to set QwiicTwist limit ");
- 
+  
 //		if(!in219.begin())
 //			throw Exception("failed to setup IN219 ");
 
@@ -66,13 +63,12 @@ int main(int argc, const char * argv[]) {
 		if(!vfd.reset())
 			throw Exception("failed to RESET VFD ");
 					 
-					 vfd.reset();
+		 vfd.reset();
 
 		
-		if(!vfd.setBrightness(twistCount))
+		if(!vfd.setBrightness(dimLevel))
 			throw Exception("failed to Set Brightness VFD ");
 		
-		twist.setCount(twistCount);
 		
 		while(true){
 			
@@ -94,9 +90,15 @@ int main(int argc, const char * argv[]) {
 			
 			twist.isMoved(moved);
 			if(moved){
+				
+				int16_t twistCount = 0;
 				if(twist.getCount(twistCount)) {
-					vfd.setBrightness(twistCount);
-					twist.setColor(0, twistCount << 5, 0);
+					
+					dimLevel += twistCount;
+					if(dimLevel > 7) dimLevel = 7;
+					
+					vfd.setBrightness(dimLevel);
+					twist.setColor(0, dimLevel << 5, 0);
 				}
 			}
 			
@@ -128,7 +130,7 @@ int main(int argc, const char * argv[]) {
 
 			vfd.setCursor(10, 45);
 			vfd.setFont(VFD::FONT_5x7);
-			sprintf(buffer, "Dim: %-2d ", twistCount);
+			sprintf(buffer, "Dim: %d ", dimLevel);
 			vfd.write(buffer);
 			usleep(100);
 
