@@ -25,6 +25,7 @@
 #include "INA219.hpp"
 #include "QwiicTwist.hpp"
 
+
 int main(int argc, const char * argv[]) {
 	
 	
@@ -69,11 +70,14 @@ int main(int argc, const char * argv[]) {
 		if(!vfd.setBrightness(dimLevel))
 			throw Exception("failed to Set Brightness VFD ");
 		
-		
+#define TRY(_statement_) if(_statement_) { \
+			printf("FAIL AT line: %d\n", __LINE__ ); \
+			if(!vfd.begin()) Exception("failed to setup VFD "); break; }
+
 		while(true){
 			
 			char buffer[128] = {0};
-		 
+ 
 			time_t now = time(NULL);
 			struct tm *t = localtime(&now);
 			
@@ -97,41 +101,41 @@ int main(int argc, const char * argv[]) {
 					dimLevel += twistCount;
 					if(dimLevel > 7) dimLevel = 7;
 					
-					vfd.setBrightness(dimLevel);
+					TRY(vfd.setBrightness(dimLevel));
 					twist.setColor(0, dimLevel << 5, 0);
 				}
 			}
 			
-			vfd.setCursor(10,14);
-			vfd.setFont(VFD::FONT_10x14);
+			TRY(vfd.setCursor(10,14));
+			TRY(vfd.setFont(VFD::FONT_10x14));
 			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
 //			std::strftime(buffer, sizeof(buffer)-1, "%H:%M:%S%P", t);
-			vfd.write(buffer);
+			TRY(vfd.write(buffer));
 			usleep(100);
 			
-			vfd.setCursor(10, 25);
-			vfd.setFont(VFD::FONT_5x7);
+			TRY(vfd.setCursor(10, 25));
+			TRY(vfd.setFont(VFD::FONT_5x7));
 			sprintf(buffer, "Temp: %d\xA0\x46", (int) round(temp) );
-			vfd.write(buffer);
+			TRY(vfd.write(buffer));
 			usleep(100);
 
 
-			vfd.setCursor(10, 35);
-			vfd.setFont(VFD::FONT_5x7);
+			TRY(vfd.setCursor(10, 35));
+			TRY(vfd.setFont(VFD::FONT_5x7));
 			sprintf(buffer, "Pwr: %-2.2fV", vIn);
-			vfd.write(buffer);
+			TRY(vfd.write(buffer));
 			usleep(100);
 
-			vfd.setCursor(70, 35);
-			vfd.setFont(VFD::FONT_5x7);
+			TRY(vfd.setCursor(70, 35));
+			TRY(vfd.setFont(VFD::FONT_5x7));
 			sprintf(buffer, "  %-2.2fA  ", iOut);
-			vfd.write(buffer);
+			TRY(vfd.write(buffer));
 			usleep(100);
 
-			vfd.setCursor(10, 45);
-			vfd.setFont(VFD::FONT_5x7);
+			TRY(vfd.setCursor(10, 45));
+			TRY(vfd.setFont(VFD::FONT_5x7));
 			sprintf(buffer, "Dim: %d ", dimLevel);
-			vfd.write(buffer);
+			TRY(vfd.write(buffer));
 			usleep(100);
 
 //

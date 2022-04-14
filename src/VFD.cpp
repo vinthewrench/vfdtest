@@ -16,7 +16,6 @@ VFD::~VFD(){
 }
 
 constexpr uint8_t kAddr = 0x38;
-constexpr uint8_t kMaxRetry = 4;
 
 bool VFD::begin(){
 	int error = 0;
@@ -119,32 +118,20 @@ bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 		*p++ = checksum;
 		*p++ =  0x03;
 		
-		// try to send a max ofkMaxRetry tries
-		success = false;
-		for(uint8_t retryCnt = 0; retryCnt < kMaxRetry; retryCnt++){
+		for(int i = 0; i < len +4; i++){
+			if(!_i2c.writeByte(block[i]))
+				return false;
 			
-			for(int i = 0; i < len +4; i++){
-				if(!_i2c.writeByte(block[i]))
-					return false;
-			}
 			
-			if(waitusec) usleep (waitusec);
-			
-			// if we dont get a Success code, then try again
+			// if we dont get a Success code, then fail.. we need to redraw.
 			uint8_t reply = 0;
-			if( _i2c.readByte(reply) &&  reply == 0x50){
-				success = true;
-				break;
-			}
+			success = ( _i2c.readByte(reply) &&  reply == 0x50);
+			
+			if(!success) break;
+			bytesLeft-=len;
 		}
-		 
-		if(!success) break;
-		
-		bytesLeft-=len;
 	}
 	
- 
 	return success;
-	
 }
 
