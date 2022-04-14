@@ -101,9 +101,10 @@ int main(int argc, const char * argv[]) {
 				
 				int16_t twistCount = 0;
 				if(twist.getDiff(twistCount, true)) {
-		 
-					dimLevel += twistCount;
-					if(dimLevel > 7) dimLevel = 7;
+					int newLevel = dimLevel + twistCount;
+					if(newLevel > 7) newLevel = 7;
+					if(newLevel < 0) newLevel = 0;
+					dimLevel = newLevel;
 					
 					TRY(vfd.setBrightness(dimLevel));
 					twist.setColor(0, dimLevel << 5, 0);
