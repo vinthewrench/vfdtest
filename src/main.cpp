@@ -75,7 +75,6 @@ int main(int argc, const char * argv[]) {
 		 
 			time_t now = time(NULL);
 			struct tm *t = localtime(&now);
-		
 			
 			float temp;
 			float vIn;
@@ -98,7 +97,8 @@ int main(int argc, const char * argv[]) {
 			
 			vfd.setCursor(10,14);
 			vfd.setFont(VFD::FONT_10x14);
-			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
+	//		std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
+			std::strftime(buffer, sizeof(buffer)-1, "%H:%M:%S%P", t);
 			vfd.write(buffer);
 			usleep(100);
 			
