@@ -36,6 +36,7 @@ int main(int argc, const char * argv[]) {
 	
 	
 	try {
+		 int16_t twistCount = 4;
 		printf("Test start\n");
 		
 		if(!tmp117.begin())
@@ -64,10 +65,14 @@ int main(int argc, const char * argv[]) {
 		
 		if(!vfd.reset())
 			throw Exception("failed to RESET VFD ");
+					 
+					 vfd.reset();
+
 		
-		if(!vfd.setBrightness(4))
+		if(!vfd.setBrightness(twistCount))
 			throw Exception("failed to Set Brightness VFD ");
 		
+		twist.setCount(twistCount);
 		
 		while(true){
 			
@@ -80,24 +85,23 @@ int main(int argc, const char * argv[]) {
 			float vIn;
 			float iOut;
 	//		float vBatt;
-			int16_t twistCount = 0;
-			bool clicked = false;
+			bool moved = false;
 			
 			tmp117.readTempF(temp);
 			pwr.voltageOut(vIn);
 			pwr.currentOut(iOut);
 	//		vBatt = in219.getBusVoltage_V();
-			twist.getCount(twistCount);
 			
-			twist.isClicked(clicked);
-			if(clicked){
+			twist.isMoved(moved);
+			if(moved){
+				twist.getCount(twistCount);
 				vfd.setBrightness(twistCount);
 				twist.setColor(0, twistCount << 5, 0);
 			}
 			
 			vfd.setCursor(10,14);
 			vfd.setFont(VFD::FONT_10x14);
-	 		std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
+			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
 //			std::strftime(buffer, sizeof(buffer)-1, "%H:%M:%S%P", t);
 			vfd.write(buffer);
 			usleep(100);
@@ -107,6 +111,7 @@ int main(int argc, const char * argv[]) {
 			sprintf(buffer, "Temp: %d\xA0\x46", (int) round(temp) );
 			vfd.write(buffer);
 			usleep(100);
+
 
 			vfd.setCursor(10, 35);
 			vfd.setFont(VFD::FONT_5x7);
@@ -122,7 +127,7 @@ int main(int argc, const char * argv[]) {
 
 			vfd.setCursor(10, 45);
 			vfd.setFont(VFD::FONT_5x7);
-			sprintf(buffer, "Dim: %-2d", twistCount);
+			sprintf(buffer, "Dim: %-2d ", twistCount);
 			vfd.write(buffer);
 			usleep(100);
 
@@ -133,7 +138,7 @@ int main(int argc, const char * argv[]) {
 //			vfd.write(buffer);
 		
 			
- 		}
+		}
 		
 		vfd.stop();
 	 
@@ -149,5 +154,4 @@ int main(int argc, const char * argv[]) {
 	}
 
 	return EXIT_SUCCESS;
-	
 }
