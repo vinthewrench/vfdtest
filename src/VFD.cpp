@@ -121,16 +121,15 @@ bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 		for(int i = 0; i < len +4; i++){
 			if(!_i2c.writeByte(block[i]))
 				return false;
-			
-			
-			// if we dont get a Success code, then fail.. we need to redraw.
-			uint8_t reply = 0;
-			success = ( _i2c.readByte(reply) &&  reply == 0x50);
-			
-			if(!success) break;
-			bytesLeft-=len;
 		}
+		// if we dont get a Success code, then fail.. we need to redraw.
+		uint8_t reply = 0;
+		success = ( _i2c.readByte(reply) &&  reply == 0x50);
+		
+		if(!success) break;
+		bytesLeft-=len;
 	}
+ 
 	
 	return success;
 }
