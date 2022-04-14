@@ -94,9 +94,10 @@ int main(int argc, const char * argv[]) {
 			
 			twist.isMoved(moved);
 			if(moved){
-				twist.getCount(twistCount);
-				vfd.setBrightness(twistCount);
-				twist.setColor(0, twistCount << 5, 0);
+				if(twist.getCount(twistCount)) {
+					vfd.setBrightness(twistCount);
+					twist.setColor(0, twistCount << 5, 0);
+				}
 			}
 			
 			vfd.setCursor(10,14);
