@@ -100,7 +100,7 @@ int main(int argc, const char * argv[]) {
 				
 				int16_t twistCount = 0;
 				if(twist.getDiff(twistCount, true)) {
-					
+		 
 					dimLevel += twistCount;
 					if(dimLevel > 7) dimLevel = 7;
 					

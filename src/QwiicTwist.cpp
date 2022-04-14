@@ -84,7 +84,8 @@ bool QwiicTwist::getCount(int16_t &val){
 	if(_i2cPort.isAvailable()){
 		int16_t  word = 0;
 		if(_i2cPort.readWord(TWIST_COUNT, word, true)){
-				val = word;
+			printf("getCount() = %d\n",word );
+					val = word;
 				success = true;
 		}
 	}
@@ -136,6 +137,7 @@ bool QwiicTwist::getDiff(int16_t &val, bool clearValue ){
 		if(_i2cPort.readWord(TWIST_DIFFERENCE, word, true)){
 			val = word;
 			
+			printf("getDiff() = %d\n",word );
 			if (clearValue == true)
 				_i2cPort.writeWord(TWIST_DIFFERENCE, 0);
 			success = true;
