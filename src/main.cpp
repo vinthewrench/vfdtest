@@ -156,6 +156,7 @@ int main(int argc, const char * argv[]) {
 		vfd.reset();
 		vfd.reset();
 		vfd.stop();
+		twist.setColor(0, 0, 0);
 	 
 	}
 	catch ( const Exception& e)  {
