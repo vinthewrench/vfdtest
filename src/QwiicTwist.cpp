@@ -83,7 +83,7 @@ bool QwiicTwist::getCount(int16_t &val){
 	
 	if(_i2cPort.isAvailable()){
 		int16_t  word = 0;
-		if(_i2cPort.readWord(TWIST_COUNT, word, true)){
+		if(_i2cPort.readWord(TWIST_COUNT, word)){
 			printf("getCount() = %04hx\n",word );
 					val = word;
 				success = true;
@@ -98,7 +98,7 @@ bool QwiicTwist::setCount(int16_t val){
 	bool success = false;
 	
 	if(_i2cPort.isAvailable()){
-	  success = _i2cPort.writeWord(TWIST_COUNT, val, true);
+	  success = _i2cPort.writeWord(TWIST_COUNT, val);
 	}
  
 	return success;
@@ -110,7 +110,7 @@ bool QwiicTwist::getLimit(uint16_t &val){
 	bool success = false;
 	
 	if(_i2cPort.isAvailable()){
-		success = _i2cPort.readWord(TWIST_LIMIT, val, true);
+		success = _i2cPort.readWord(TWIST_LIMIT, val);
 	}
  
 	return success;
@@ -121,7 +121,7 @@ bool QwiicTwist::setLimit(uint16_t val){
 	bool success = false;
 	
 	if(_i2cPort.isAvailable()){
-	  success = _i2cPort.writeWord(TWIST_LIMIT, val, true);
+	  success = _i2cPort.writeWord(TWIST_LIMIT, val);
 	}
 
 	return success;
@@ -134,7 +134,7 @@ bool QwiicTwist::getDiff(int16_t &val, bool clearValue ){
 	
 	if(_i2cPort.isAvailable()){
 		int16_t  word = 0;
-		if(_i2cPort.readWord(TWIST_DIFFERENCE, word, true)){
+		if(_i2cPort.readWord(TWIST_DIFFERENCE, word)){
 			val = word;
 			
 			printf("getDiff() =  %04hx\n",word );
