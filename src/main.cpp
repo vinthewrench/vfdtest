@@ -72,7 +72,7 @@ int main(int argc, const char * argv[]) {
 		
 #define TRY(_statement_) if(_statement_) { \
 			printf("FAIL AT line: %d\n", __LINE__ ); \
-			if(!vfd.begin()) Exception("failed to setup VFD "); break; }
+			if(!vfd.begin()) Exception("failed to reset VFD "); continue; }
 
 		while(true){
 			
