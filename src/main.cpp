@@ -52,7 +52,10 @@ int main(int argc, const char * argv[]) {
 		if(!twist.setColor(0, 128, 0))
 			throw Exception("failed to set QwiicTwist color ");
 		
-		if(!twist.setCount(0))
+		if(!twist.setCount(4))
+			throw Exception("failed to set QwiicTwist count ");
+  
+		if(!twist.setLimit(8))
 			throw Exception("failed to set QwiicTwist count ");
   
 //		if(!in219.begin())
@@ -96,7 +99,7 @@ int main(int argc, const char * argv[]) {
 			if(moved){
 				
 				int16_t twistCount = 0;
-				if(twist.getCount(twistCount)) {
+				if(twist.getDiff(twistCount, true)) {
 					
 					dimLevel += twistCount;
 					if(dimLevel > 7) dimLevel = 7;

@@ -37,8 +37,8 @@ constexpr uint8_t statusButtonClickedBit = 2;
 constexpr uint8_t statusButtonPressedBit = 1;
 constexpr uint8_t statusEncoderMovedBit = 0;
 
-constexpr uint8_t enableInterruptButtonBit = 1;
-constexpr uint8_t enableInterruptEncoderBit = 0;
+//constexpr uint8_t enableInterruptButtonBit = 1;
+//constexpr uint8_t enableInterruptEncoderBit = 0;
 
 
 QwiicTwist::QwiicTwist(){
@@ -82,12 +82,10 @@ bool QwiicTwist::getCount(int16_t &val){
 	bool success = false;
 	
 	if(_i2cPort.isAvailable()){
-		uint16_t  word = 0;
+		int16_t  word = 0;
 		if(_i2cPort.readWord(TWIST_COUNT, word, true)){
-			if(word != UINT16_MAX){
-				val = (int16_t) word;
+				val = word;
 				success = true;
-			}
 		}
 	}
  
@@ -134,9 +132,9 @@ bool QwiicTwist::getDiff(int16_t &val, bool clearValue ){
 	bool success = false;
 	
 	if(_i2cPort.isAvailable()){
-		uint16_t  word = 0;
+		int16_t  word = 0;
 		if(_i2cPort.readWord(TWIST_DIFFERENCE, word, true)){
-			val = (int16_t) word;
+			val = word;
 			
 			if (clearValue == true)
 				_i2cPort.writeWord(TWIST_DIFFERENCE, 0);

@@ -228,6 +228,29 @@ bool I2C::readByte(uint8_t regAddr,  uint8_t& byte){
 	return true;
 }
 
+
+bool I2C::readWord(uint8_t regAddr,  int16_t& word, bool swap){
+	if(!_isSetup) return false;
+
+	union i2c_smbus_data data;
+	
+	if(i2c_smbus_access (_fd, I2C_SMBUS_READ, regAddr, I2C_SMBUS_WORD_DATA, &data) < 0){
+		
+		ELOG_ERROR(ErrorMgr::FAC_I2C, _devAddr, errno,  "I2C_SMBUS_READ WORD (%02x) ", regAddr);
+
+		return false;
+	}
+
+	if(swap){
+		word = ((data.block[0]) << 8) | (data.block[1] );
+	}
+	else {
+		word = data.word;
+	}
+	return true;
+
+}
+
 bool I2C::readWord(uint8_t regAddr,  uint16_t& word, bool swap){
 
 	if(!_isSetup) return false;
