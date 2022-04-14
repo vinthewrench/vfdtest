@@ -52,23 +52,24 @@ int main(int argc, const char * argv[]) {
 		if(!twist.setColor(0, 128, 0))
 			throw Exception("failed to set QwiicTwist color ");
 		
-		if(!twist.setCount(4))
+		if(!twist.setCount(0))
 			throw Exception("failed to set QwiicTwist count ");
   
-		if(!twist.setLimit(8))
-			throw Exception("failed to set QwiicTwist count ");
-  
+//		if(!twist.setLimit(8))
+//			throw Exception("failed to set QwiicTwist count ");
+//
 //		if(!in219.begin())
 //			throw Exception("failed to setup IN219 ");
 
 		if(!vfd.begin())
 			throw Exception("failed to setup VFD ");
 		
-		if(!vfd.reset())
-			throw Exception("failed to RESET VFD ");
-					 
-		 vfd.reset();
-
+		for(int i = 0;; i++){
+			if(vfd.reset()) break;
+			if(i > 9)
+				throw Exception("failed to RESET VFD ");
+ 		}
+ 
 		
 		if(!vfd.setBrightness(dimLevel))
 			throw Exception("failed to Set Brightness VFD ");
