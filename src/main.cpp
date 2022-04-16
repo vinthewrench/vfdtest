@@ -78,8 +78,8 @@ int main(int argc, const char * argv[]) {
 			if(!vfd.begin()) Exception("failed to reset VFD "); continue; }
 
 	 
-		const uint8_t* msg = (uint8_t*) "\x1B\x00\x25\x1D\x10\x15\x1FPLEASE WAIT\x10\x0A\x29Initializing System";
-		vfd.writePacket(msg, 39, 10000);
+		const uint8_t* msg = (uint8_t*) "\x1B\x00\x25\x1D\x10\x15\x1FPLEASE WAIT\x10\x07\x29Initializing System";
+		vfd.writePacket(msg, 40, 10000);
 		vfd.writePacket((uint8_t*)"\x00", 1, 10000);
 	
 		sleep(1);
