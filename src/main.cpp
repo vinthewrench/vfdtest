@@ -81,9 +81,7 @@ int main(int argc, const char * argv[]) {
 		
 		const uint8_t* msg = (uint8_t*) "\x1B\x00\x24\x10\x1E\x1DPLEASE WAIT\x10\x06\29INITIALIZNG SYSTEM";
 		vfd.writePacket(msg, 38, 10000);
-	 
-		vfd.reset();
-		
+	  
 		while(true){
 			
 			char buffer[128] = {0};
