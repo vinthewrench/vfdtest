@@ -77,11 +77,13 @@ int main(int argc, const char * argv[]) {
 			printf("FAIL AT line: %d\n", __LINE__ ); \
 			if(!vfd.begin()) Exception("failed to reset VFD "); continue; }
 
-		vfd.reset();
-		
-		const uint8_t* msg = (uint8_t*) "\x1B\x00\x24\x10\x1E\x1DPLEASE WAIT\x10\x06\29INITIALIZNG SYSTEM";
+	 
+		const uint8_t* msg = (uint8_t*) "\x1B\x00\x24\x10\x15\x1FPLEASE WAIT\x10\x1E\29INITIALIZNG SYSTEM";
 		vfd.writePacket(msg, 38, 10000);
-	  
+		vfd.writePacket((uint8_t*)"\x00", 1, 10000);
+	
+		sleep(1);
+		
 		while(true){
 			
 			char buffer[128] = {0};
