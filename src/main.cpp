@@ -21,8 +21,8 @@
 
 #include "VFD.hpp"
 #include "TMP117.hpp"
-#include "WittyPi3.hpp"
-#include "INA219.hpp"
+//#include "WittyPi3.hpp"
+//#include "INA219.hpp"
 #include "QwiicTwist.hpp"
 
 
@@ -31,8 +31,8 @@ int main(int argc, const char * argv[]) {
 	
 	VFD 		vfd;
 	TMP117 	tmp117;
-	WittyPi3	pwr;
-	INA219	in219;
+//	WittyPi3	pwr;
+//	INA219	in219;
 	QwiicTwist	twist;
 	
 	try {
@@ -40,11 +40,11 @@ int main(int argc, const char * argv[]) {
 		
 		printf("Test start\n");
 		
-		if(!tmp117.begin())
+		if(!tmp117.begin(0x4A))
 			throw Exception("failed to setup TMP117 ");
-		
-		if(!pwr.begin())
-			throw Exception("failed to setup WittyPi3 ");
+//
+//		if(!pwr.begin())
+//			throw Exception("failed to setup WittyPi3 ");
 		
 		if(!twist.begin())
 			throw Exception("failed to setup QwiicTwist ");
@@ -86,15 +86,15 @@ int main(int argc, const char * argv[]) {
 			struct tm *t = localtime(&now);
 			
 			float temp;
-			float vIn;
-			float iOut;
+//			float vIn;
+//			float iOut;
 	//		float vBatt;
 			bool moved = false;
 			bool clicked = false;
 	
 			tmp117.readTempF(temp);
-			pwr.voltageOut(vIn);
-			pwr.currentOut(iOut);
+//			pwr.voltageOut(vIn);
+//			pwr.currentOut(iOut);
 	//		vBatt = in219.getBusVoltage_V();
 			
 			twist.isMoved(moved);
@@ -125,17 +125,16 @@ int main(int argc, const char * argv[]) {
 			TRY(vfd.write(buffer));
 			usleep(100);
 
-
-			TRY(vfd.setCursor(10, 35));
-			TRY(vfd.setFont(VFD::FONT_5x7));
-			sprintf(buffer, "Pwr: %-2.2fV", vIn);
-			TRY(vfd.write(buffer));
-			usleep(100);
-
-			TRY(vfd.setCursor(70, 35));
-			TRY(vfd.setFont(VFD::FONT_5x7));
-			sprintf(buffer, "  %-2.2fA  ", iOut);
-			TRY(vfd.write(buffer));
+//			TRY(vfd.setCursor(10, 35));
+//			TRY(vfd.setFont(VFD::FONT_5x7));
+//			sprintf(buffer, "Pwr: %-2.2fV", vIn);
+//			TRY(vfd.write(buffer));
+//			usleep(100);
+//
+//			TRY(vfd.setCursor(70, 35));
+//			TRY(vfd.setFont(VFD::FONT_5x7));
+//			sprintf(buffer, "  %-2.2fA  ", iOut);
+//			TRY(vfd.write(buffer));
 			usleep(100);
 
 			TRY(vfd.setCursor(10, 45));
