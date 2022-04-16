@@ -34,6 +34,7 @@ public:
 
 	bool write(string str);
 	bool write(const char* str);
+	bool writePacket(const uint8_t *data , size_t len , useconds_t waitusec = 50);
 
 	bool setBrightness(uint8_t);  //  0 == off - 7 == max
 
@@ -42,7 +43,6 @@ public:
 
 private:
 	
-	bool writePacket(const uint8_t *data , size_t len , useconds_t waitusec = 50);
 
 	I2C 		_i2c;
 	bool		_isSetup;

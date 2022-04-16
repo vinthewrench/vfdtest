@@ -21,7 +21,6 @@
 
 #include "VFD.hpp"
 #include "TMP117.hpp"
-//#include "WittyPi3.hpp"
 //#include "INA219.hpp"
 #include "QwiicTwist.hpp"
 
@@ -78,6 +77,9 @@ int main(int argc, const char * argv[]) {
 			printf("FAIL AT line: %d\n", __LINE__ ); \
 			if(!vfd.begin()) Exception("failed to reset VFD "); continue; }
 
+		const uint8_t* msg = (uint8_t*) "\x1B\x00\x24\x10\x1E\x1DPLEASE WAIT\x10\x06\29INITIALIZNG SYSTEM";
+		vfd.writePacket(msg, 38, 1000);
+	 
 		while(true){
 			
 			char buffer[128] = {0};
@@ -86,16 +88,10 @@ int main(int argc, const char * argv[]) {
 			struct tm *t = localtime(&now);
 			
 			float temp;
-//			float vIn;
-//			float iOut;
-	//		float vBatt;
 			bool moved = false;
 			bool clicked = false;
 	
 			tmp117.readTempF(temp);
-//			pwr.voltageOut(vIn);
-//			pwr.currentOut(iOut);
-	//		vBatt = in219.getBusVoltage_V();
 			
 			twist.isMoved(moved);
 			if(moved){

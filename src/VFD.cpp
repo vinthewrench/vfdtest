@@ -92,7 +92,7 @@ bool VFD:: write(string str){
 	
 	return  writePacket( (uint8_t *) str.c_str(), str.size(), 500);
 }
-
+ 
 
 bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 	
