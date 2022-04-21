@@ -38,6 +38,9 @@ int main(int argc, const char * argv[]) {
 		uint8_t dimLevel = 4;
 		
 		printf("Test start\n");
+	 
+		if(!vfd.begin("/dev/ttySC0"))
+			throw Exception("failed to setup VFD ");
 		
 		if(!tmp117.begin(0x4A))
 			throw Exception("failed to setup TMP117 ");
@@ -60,9 +63,6 @@ int main(int argc, const char * argv[]) {
 //		if(!in219.begin())
 //			throw Exception("failed to setup IN219 ");
 
-		if(!vfd.begin())
-			throw Exception("failed to setup VFD ");
-		
 		for(int i = 0;; i++){
 			if(vfd.reset()) break;
 			if(i > 9)
@@ -75,13 +75,11 @@ int main(int argc, const char * argv[]) {
 		
 #define TRY(_statement_) if(!(_statement_)) { \
 			printf("FAIL AT line: %d\n", __LINE__ ); \
-			if(!vfd.begin()) Exception("failed to reset VFD "); continue; }
+			 }
 
 	 
 		const uint8_t* msg = (uint8_t*) "\x1B\x00\x25\x1D\x10\x15\x1FPLEASE WAIT\x10\x07\x29Initializing System";
 		vfd.writePacket(msg, 40, 10000);
-		vfd.writePacket((uint8_t*)"\x00", 1, 10000);
-	
 		sleep(1);
 		
 		while(true){

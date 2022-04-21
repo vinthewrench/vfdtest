@@ -5,10 +5,16 @@
 //  Created by Vincent Moscaritolo on 4/13/22.
 //
 #pragma once
-
-#include "I2C.hpp"
-#include  <stddef.h>
+#include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
+#include <stddef.h>
 #include <unistd.h>
+#include <termios.h>
+#include <string>
 
 
 using namespace std;
@@ -25,10 +31,9 @@ public:
 	VFD();
   ~VFD();
 	
-  bool begin();		// alwsys uses a fixed address
-  bool begin(int &error);
+  bool begin(string path);		// alwsys uses a fixed address
+  bool begin(string path, int &error);
   void stop();
-	uint8_t	getDevAddr();
 
  	bool reset();
 
@@ -44,8 +49,9 @@ public:
 private:
 	
 
-	I2C 		_i2c;
+	int	 	_fd;
 	bool		_isSetup;
 
+	struct termios _tty_opts_backup;
 
 };

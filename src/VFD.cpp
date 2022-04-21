@@ -6,45 +6,76 @@
 //
 
 #include "VFD.hpp"
+#include <fcntl.h>
+#include <errno.h> // Error integer and strerror() function
+#include "ErrorMgr.hpp"
 
 
 VFD::VFD(){
-_isSetup = false;}
+_isSetup = false;
+	_fd = -1;
+	
+	
+}
 
 VFD::~VFD(){
 	stop();
 }
 
-constexpr uint8_t kAddr = 0x38;
 
-bool VFD::begin(){
+bool VFD::begin(string path){
 	int error = 0;
 
-	return begin(error);
+	return begin(path,error);
 }
 
  
-bool VFD::begin(int &error){
+bool VFD::begin(string path, int &error){
 	
 	_isSetup = false;
+	struct termios tty_opts_raw;
+
+	int fd ;
+
+	if((fd = ::open( path.c_str(), O_RDWR)) <0) {
  
-	if( _i2c.begin(kAddr, error) )
-	{
-		_isSetup = true;
+		ELOG_ERROR(ErrorMgr::FAC_DEVICE, 0, errno, "OPEN %s", path.c_str());
+		error = errno;
+		return false;
 	}
  
+	// Back up current TTY settings
+	if( tcgetattr(fd, &_tty_opts_backup)<0) {
+		
+		ELOG_ERROR(ErrorMgr::FAC_DEVICE, 0, errno, "tcgetattr %s", path.c_str());
+		error = errno;
+		return false;
+	}
+	
+	cfmakeraw(&tty_opts_raw);
+	tty_opts_raw.c_ospeed =  B38400;
+	tty_opts_raw.c_ispeed =  B38400;
+ 
+	tcsetattr(fd, TCSANOW, &tty_opts_raw);
+ 
+	_fd = fd;
+	_isSetup = true;
 	return _isSetup;
 }
 
 void VFD::stop(){
+	
+	if(_isSetup && _fd > -1){
+		// Restore previous TTY settings
+		tcsetattr(_fd, TCSANOW, &_tty_opts_backup);
+		close(_fd);
+		_fd = -1;
+	}
+	
 	_isSetup = false;
-	_i2c.stop();
  }
 
-uint8_t	VFD::getDevAddr(){
-	return _i2c.getDevAddr();
-};
-
+ 
 
 bool VFD::reset(){
 	
@@ -97,39 +128,67 @@ bool VFD:: write(string str){
 bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 	
 	bool success = false;
-	I2C::i2c_block_t block;
 	
-	if(!_isSetup) return false;
+	constexpr size_t blocksize = 32;
+	uint8_t buffer[blocksize];
 	
 	size_t bytesLeft = len;
 	while(bytesLeft > 0) {
 		
-		uint8_t len = bytesLeft < 28?bytesLeft:28;
+		uint8_t len = bytesLeft < blocksize? bytesLeft:blocksize;
 		uint8_t checksum = 0;
 		
-		uint8_t *p = block;
-		*p++ = 0x02;
-		*p++ =  len;
+		uint8_t *p = buffer;
+		//		*p++ = 0x02;
+		//		*p++ =  len;
 		
 		for(int i = 0; i < len; i++){
 			checksum += *data;
 			*p++ = *data++;
 		}
-		*p++ = checksum;
-		*p++ =  0x03;
+		//	*p++ = checksum;
+		//	*p++ =  0x03;
 		
-		for(int i = 0; i < len +4; i++){
-			if(!_i2c.writeByte(block[i]))
-				return false;
-		}
 		// if we dont get a Success code, then fail.. we need to redraw.
-		uint8_t reply = 0;
-		success = ( _i2c.readByte(reply) &&  reply == 0x50);
+		success = (::write(_fd,buffer, len) == len);
 		
 		if(!success) break;
 		bytesLeft-=len;
 	}
- 
+//
+//	I2C::i2c_block_t block;
+//
+//	if(!_isSetup) return false;
+//
+//	size_t bytesLeft = len;
+//	while(bytesLeft > 0) {
+//
+//		uint8_t len = bytesLeft < 28?bytesLeft:28;
+//		uint8_t checksum = 0;
+//
+//		uint8_t *p = block;
+//		*p++ = 0x02;
+//		*p++ =  len;
+//
+//		for(int i = 0; i < len; i++){
+//			checksum += *data;
+//			*p++ = *data++;
+//		}
+//		*p++ = checksum;
+//		*p++ =  0x03;
+//
+//		for(int i = 0; i < len +4; i++){
+//			if(!_i2c.writeByte(block[i]))
+//				return false;
+//		}
+//		// if we dont get a Success code, then fail.. we need to redraw.
+//		uint8_t reply = 0;
+//		success = ( _i2c.readByte(reply) &&  reply == 0x50);
+//
+//		if(!success) break;
+//		bytesLeft-=len;
+//	}
+//
 	
 	return success;
 }
