@@ -39,7 +39,7 @@ int main(int argc, const char * argv[]) {
 		
 		printf("Test start\n");
 	 
-		if(!vfd.begin("/dev/ttySC0"))
+		if(!vfd.begin("/dev/ttySC1"))
 			throw Exception("failed to setup VFD ");
 		
 		if(!tmp117.begin(0x4A))
