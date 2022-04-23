@@ -23,41 +23,63 @@ VFD::~VFD(){
 }
 
 
-bool VFD::begin(string path){
+bool VFD::begin(string path, speed_t speed){
 	int error = 0;
 
-	return begin(path,error);
+	return begin(path, speed, error);
 }
 
  
-bool VFD::begin(string path, int &error){
+bool VFD::begin(string path, speed_t speed,  int &error){
 	
 	_isSetup = false;
-	struct termios tty_opts_raw;
-
+	struct termios options;
+	
 	int fd ;
-
-	if((fd = ::open( path.c_str(), O_RDWR)) <0) {
- 
+	
+		if((fd = ::open( path.c_str(), O_RDWR | O_NOCTTY)) <0) {
 		ELOG_ERROR(ErrorMgr::FAC_DEVICE, 0, errno, "OPEN %s", path.c_str());
 		error = errno;
 		return false;
 	}
- 
-	// Back up current TTY settings
+	
+	fcntl(fd, F_SETFL, 0);      // Clear the file status flags
+
+		// Back up current TTY settings
 	if( tcgetattr(fd, &_tty_opts_backup)<0) {
-		
 		ELOG_ERROR(ErrorMgr::FAC_DEVICE, 0, errno, "tcgetattr %s", path.c_str());
 		error = errno;
 		return false;
 	}
 	
-	cfmakeraw(&tty_opts_raw);
-	tty_opts_raw.c_ospeed =  B38400;
-	tty_opts_raw.c_ispeed =  B38400;
+	cfmakeraw(&options);
+	options.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
+	options.c_cflag &= ~CSTOPB; // Clear stop field, only one stop bit used in communication (most common)
+	options.c_cflag &= ~CSIZE; // Clear all bits that set the data size
+	options.c_cflag |= CS8; // 8 bits per byte (most common)
+	options.c_cflag &= ~CRTSCTS; // Disable RTS/CTS hardware flow control (most common)
+	options.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
+	
+	options.c_lflag &= ~ICANON;
+	options.c_lflag &= ~ECHO; // Disable echo
+	options.c_lflag &= ~ECHOE; // Disable erasure
+	options.c_lflag &= ~ECHONL; // Disable new-line echo
+	options.c_lflag &= ~ISIG; // Disable interpretation of INTR, QUIT and SUSP
+	options.c_iflag &= ~(IXON | IXOFF | IXANY); // Turn off s/w flow ctrl
+	options.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
+	
+	options.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
+	options.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
  
-	tcsetattr(fd, TCSANOW, &tty_opts_raw);
- 
+	cfsetospeed (&options, speed);
+	cfsetispeed (&options, speed);
+
+	 if (tcsetattr(fd, TCSANOW, &options) < 0){
+		ELOG_ERROR(ErrorMgr::FAC_DEVICE, 0, errno, "Unable to tcsetattr %s", path.c_str());
+		error = errno;
+		return false;
+	}
+  
 	_fd = fd;
 	_isSetup = true;
 	return _isSetup;
@@ -125,13 +147,51 @@ bool VFD:: write(string str){
 }
  
 
+#define PACKET_MODE 1
+
 bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 	
 	bool success = false;
 	
 	constexpr size_t blocksize = 32;
-	uint8_t buffer[blocksize];
+	uint8_t buffer[blocksize + 4 ];
 	
+		
+#if PACKET_MODE
+	size_t bytesLeft = len;
+		while(bytesLeft > 0) {
+	
+			uint8_t len = bytesLeft < 28?bytesLeft:28;
+			uint8_t checksum = 0;
+	
+			uint8_t *p = buffer;
+			*p++ = 0x02;
+			*p++ =  len;
+	
+			for(int i = 0; i < len; i++){
+				checksum += *data;
+				*p++ = *data++;
+			}
+			*p++ = checksum;
+			*p++ =  0x03;
+	
+	#if 1
+		for(int i = 0; i < len +4; i++){
+			success = (::write(_fd,&buffer[i] , 1) == 1);
+				if(!success) return false;
+				 usleep(100);
+		}
+
+	#else
+			success = (::write(_fd,buffer , len) == len);
+			if(!success) break;
+			usleep(waitusec);
+	#endif
+		if(!success) break;
+		bytesLeft-=len;
+
+
+#else
 	size_t bytesLeft = len;
 	while(bytesLeft > 0) {
 		
@@ -139,9 +199,7 @@ bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 		uint8_t checksum = 0;
 		
 		uint8_t *p = buffer;
-		//		*p++ = 0x02;
-		//		*p++ =  len;
-		
+
 		for(int i = 0; i < len; i++){
 			checksum += *data;
 			*p++ = *data++;
@@ -154,7 +212,8 @@ bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 		
 		if(!success) break;
 		bytesLeft-=len;
-	}
+#endif
+			}
 //
 //	I2C::i2c_block_t block;
 //

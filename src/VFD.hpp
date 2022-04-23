@@ -31,8 +31,8 @@ public:
 	VFD();
   ~VFD();
 	
-  bool begin(string path);		// alwsys uses a fixed address
-  bool begin(string path, int &error);
+  bool begin(string path, speed_t speed =  B19200);		// alwsys uses a fixed address
+  bool begin(string path, speed_t speed, int &error);
   void stop();
 
  	bool reset();
