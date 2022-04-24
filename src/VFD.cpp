@@ -57,7 +57,8 @@ bool VFD::begin(string path, speed_t speed,  int &error){
 	options.c_cflag &= ~CSTOPB; // Clear stop field, only one stop bit used in communication (most common)
 	options.c_cflag &= ~CSIZE; // Clear all bits that set the data size
 	options.c_cflag |= CS8; // 8 bits per byte (most common)
-	options.c_cflag &= ~CRTSCTS; // Disable RTS/CTS hardware flow control (most common)
+	// options.c_cflag &= ~CRTSCTS; // Disable RTS/CTS hardware flow control 	options.c_cflag |=  CRTSCTS; // Disable RTS/CTS hardware flow control (most common)
+	options.c_cflag |=  CRTSCTS; // DCTS flow control of output
 	options.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
 	
 	options.c_lflag &= ~ICANON;
@@ -147,17 +148,18 @@ bool VFD:: write(string str){
 }
  
 
-#define PACKET_MODE 1
+#define PACKET_MODE 0
 
 bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 	
 	bool success = false;
 	
-	constexpr size_t blocksize = 32;
-	uint8_t buffer[blocksize + 4 ];
 	
 		
 #if PACKET_MODE
+	constexpr size_t blocksize = 32;
+	uint8_t buffer[blocksize + 4 ];
+
 	size_t bytesLeft = len;
 		while(bytesLeft > 0) {
 	
@@ -179,7 +181,7 @@ bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 		for(int i = 0; i < len +4; i++){
 			success = (::write(_fd,&buffer[i] , 1) == 1);
 				if(!success) return false;
-				 usleep(100);
+				 usleep(10);
 		}
 
 	#else
@@ -192,65 +194,21 @@ bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 
 		if(!success) break;
 		bytesLeft-=len;
-
+		}
 
 #else
-	size_t bytesLeft = len;
-	while(bytesLeft > 0) {
-		
-		uint8_t len = bytesLeft < blocksize? bytesLeft:blocksize;
-		uint8_t checksum = 0;
-		
-		uint8_t *p = buffer;
 
-		for(int i = 0; i < len; i++){
-			checksum += *data;
-			*p++ = *data++;
-		}
-		//	*p++ = checksum;
-		//	*p++ =  0x03;
-		
-		// if we dont get a Success code, then fail.. we need to redraw.
-		success = (::write(_fd,buffer, len) == len);
-		
-		if(!success) break;
-		bytesLeft-=len;
+	success = (::write(_fd, data , len) == len);
+
+if(!success)
+	printf("error %d\n",errno);
+ 
+	// for(int i = 0; i<len; i++){
+	// 	success = (::write(_fd, &data[i], 1) == 1);
+	//  	if(!success) break;
+	// }
+	// usleep(waitusec);
 #endif
-			}
-//
-//	I2C::i2c_block_t block;
-//
-//	if(!_isSetup) return false;
-//
-//	size_t bytesLeft = len;
-//	while(bytesLeft > 0) {
-//
-//		uint8_t len = bytesLeft < 28?bytesLeft:28;
-//		uint8_t checksum = 0;
-//
-//		uint8_t *p = block;
-//		*p++ = 0x02;
-//		*p++ =  len;
-//
-//		for(int i = 0; i < len; i++){
-//			checksum += *data;
-//			*p++ = *data++;
-//		}
-//		*p++ = checksum;
-//		*p++ =  0x03;
-//
-//		for(int i = 0; i < len +4; i++){
-//			if(!_i2c.writeByte(block[i]))
-//				return false;
-//		}
-//		// if we dont get a Success code, then fail.. we need to redraw.
-//		uint8_t reply = 0;
-//		success = ( _i2c.readByte(reply) &&  reply == 0x50);
-//
-//		if(!success) break;
-//		bytesLeft-=len;
-//	}
-//
 	
 	return success;
 }
