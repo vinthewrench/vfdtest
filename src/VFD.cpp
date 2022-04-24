@@ -187,6 +187,9 @@ bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 			if(!success) break;
 			usleep(waitusec);
 	#endif
+			
+			usleep(waitusec);
+
 		if(!success) break;
 		bytesLeft-=len;
 
