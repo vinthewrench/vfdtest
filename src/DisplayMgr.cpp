@@ -42,7 +42,9 @@ bool DisplayMgr::begin(string path, speed_t speed,  int &error){
 	if(!_vfd.begin(path,speed,error))
 		throw Exception("failed to setup VFD ");
 	
-	_vfd.reset();
+	if(_vfd.reset())
+		_isSetup = true;
+	
 	
 	return _isSetup;
 }
