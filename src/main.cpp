@@ -90,7 +90,6 @@ printf("FAIL AT line: %d\n", __LINE__ ); \
 		//
 		
 			
-			
 				twist.isMoved(moved);
 				if(moved){
 	
