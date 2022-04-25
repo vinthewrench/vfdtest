@@ -143,7 +143,7 @@ bool VFD::clearScreen(){
 
 	return  writePacket(buffer, sizeof(buffer), 50);
 }
-}
+ 
 
 
 bool VFD::write(const char* str){

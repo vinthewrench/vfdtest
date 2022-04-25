@@ -316,12 +316,12 @@ void DisplayMgr::displayUpdate(bool redraw){
 	}
 	catch ( const Exception& e)  {
 		printf("\tError %d %s\n\n", e.getErrorNumber(), e.what());
-		return -1;
+		 
 	}
 	catch (std::invalid_argument& e)
 	{
 		printf("EXCEPTION: %s ",e.what() );
-		return -1;
+	 
 	}
 	
 	
