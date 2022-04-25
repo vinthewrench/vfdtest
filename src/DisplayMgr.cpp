@@ -333,14 +333,12 @@ void DisplayMgr::displayStartupScreen(bool redraw){
  
 	if(redraw)
 		_vfd.clearScreen();
-	 
-	TRY(_vfd.setCursor(10,14));
 	
 	TRY(_vfd.setCursor(10,14));
 	TRY(_vfd.setFont(VFD::FONT_5x7));
 	TRY(_vfd.write("Starting UP"));
 	
-	printf("displayStartupScreen %s\n",redraw?"REDRAW":"");
+//	printf("displayStartupScreen %s\n",redraw?"REDRAW":"");
 }
 
 void DisplayMgr::displayTimeScreen(bool redraw){
@@ -358,12 +356,19 @@ void DisplayMgr::displayTimeScreen(bool redraw){
 	TRY(_vfd.setFont(VFD::FONT_10x14));
 	TRY(_vfd.write(buffer));
  
-	printf("displayTimeScreen %s\n",redraw?"REDRAW":"");
+//	printf("displayTimeScreen %s\n",redraw?"REDRAW":"");
 
 }
 
 void DisplayMgr::displayVolumeScreen(bool redraw){
 	printf("displayVolumeScreen %s\n",redraw?"REDRAW":"");
+
+	if(redraw)
+		_vfd.clearScreen();
+	 	
+	TRY(_vfd.setCursor(10,14));
+	TRY(_vfd.setFont(VFD::FONT_5x7));
+	TRY(_vfd.write("Volume Change"));
 
 }
 

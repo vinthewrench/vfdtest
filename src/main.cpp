@@ -86,11 +86,30 @@ printf("FAIL AT line: %d\n", __LINE__ ); \
 		
 		while(true){
 			bool clicked = false;
+			bool moved = false;
 		//
-			usleep(1);
+		
 			
+			
+				twist.isMoved(moved);
+				if(moved){
+	
+					display.showVolumeChange();
+//					int16_t twistCount = 0;
+//					if(twist.getDiff(twistCount, true)) {
+//						int newLevel = dimLevel + twistCount;
+//						if(newLevel > 7) newLevel = 7;
+//						if(newLevel < 0) newLevel = 0;
+//						dimLevel = newLevel;
+//
+//						TRY(vfd.setBrightness(dimLevel));
+//						twist.setColor(0, dimLevel << 5, 0);
+//					}
+				}
+
 			if(twist.isClicked(clicked) && clicked) break;
 		 
+		usleep(1);
 		};
 		
 		
