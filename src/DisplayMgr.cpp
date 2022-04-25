@@ -351,7 +351,7 @@ void DisplayMgr::displayTimeScreen(bool redraw){
 
 	std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
 	
-	TRY(_vfd.setCursor(22,14));
+	TRY(_vfd.setCursor(10,22));
 	
 	TRY(_vfd.setFont(VFD::FONT_10x14));
 	TRY(_vfd.write(buffer));
