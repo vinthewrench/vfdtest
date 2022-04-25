@@ -15,6 +15,7 @@ set(SOURCES
 #	src/WittyPi3.cpp
 	src/QwiicTwist.cpp
 	src/VFD.cpp
+	src/DisplayMgr.cpp
 	)
 
 add_executable(vfd ${SOURCES})
