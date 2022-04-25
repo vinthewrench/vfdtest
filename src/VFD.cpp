@@ -139,7 +139,7 @@ bool VFD::setCursor(uint8_t x, uint8_t y){
 
 bool VFD::clearScreen(){
 	
-	uint8_t buffer[] = {0x11, 0,0, 63, 127};
+	uint8_t buffer[] = {0x12, 0, 0, 63, 127};
 
 	return  writePacket(buffer, sizeof(buffer), 50);
 }

@@ -331,7 +331,8 @@ void DisplayMgr::displayUpdate(bool redraw){
 void DisplayMgr::displayStartupScreen(bool redraw){
 	
  
-	_vfd.clearScreen();
+	if(redraw)
+		_vfd.clearScreen();
 	 
 	TRY(_vfd.setCursor(10,14));
 	
@@ -347,8 +348,9 @@ void DisplayMgr::displayTimeScreen(bool redraw){
 	struct tm *t = localtime(&now);
 	char buffer[128] = {0};
 	
-	_vfd.clearScreen();
-	
+	if(redraw)
+		_vfd.clearScreen();
+
 	std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
 	
 	TRY(_vfd.setCursor(10,14));
