@@ -37,11 +37,14 @@ public:
 
  	bool reset();
 
+	
 	bool write(string str);
 	bool write(const char* str);
 	bool writePacket(const uint8_t *data , size_t len , useconds_t waitusec = 50);
 
 	bool setBrightness(uint8_t);  //  0 == off - 7 == max
+
+	bool clearScreen();
 
 	bool setCursor(uint8_t x, uint8_t y); 
 	bool  setFont(font_t font);

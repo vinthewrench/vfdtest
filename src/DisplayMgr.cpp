@@ -7,6 +7,14 @@
 
 #include "DisplayMgr.hpp"
 #include <string>
+#include <iomanip>
+#include <time.h>
+#include <sys/time.h>
+#include <iostream>
+
+#define TRY(_statement_) if(!(_statement_)) { \
+printf("FAIL AT line: %d\n", __LINE__ ); \
+}
 
 DisplayMgr *DisplayMgr::sharedInstance = NULL;
 
@@ -275,41 +283,79 @@ void DisplayMgr::DisplayUpdateThreadCleanup(void *context){
 // MARK: -  Display Draw code
 
 void DisplayMgr::displayUpdate(bool redraw){
-	switch (_current_mode) {
-			
-		case MODE_STARTUP:
-			displayStartupScreen(redraw);
-			break;
-			
-		case MODE_TIME:
-			displayTimeScreen(redraw);
-			break;
-
-		case MODE_VOLUME:
-			displayVolumeScreen(redraw);
-			break;
-			
-		case MODE_RADIO:
-			displayRadioScreen(redraw);
-			break;
- 
- 	case MODE_DIAG:
- 			displayDiagScreen(redraw);
- 
 	
-		default:
-			displayInternalError(redraw);
+	if(!_isSetup)
+		return;
+	try {
+		switch (_current_mode) {
+				
+			case MODE_STARTUP:
+				displayStartupScreen(redraw);
+				break;
+				
+			case MODE_TIME:
+				displayTimeScreen(redraw);
+				break;
+				
+			case MODE_VOLUME:
+				displayVolumeScreen(redraw);
+				break;
+				
+			case MODE_RADIO:
+				displayRadioScreen(redraw);
+				break;
+				
+			case MODE_DIAG:
+				displayDiagScreen(redraw);
+				
+				
+			default:
+				displayInternalError(redraw);
+		}
+		
 	}
-
+	catch ( const Exception& e)  {
+		printf("\tError %d %s\n\n", e.getErrorNumber(), e.what());
+		return -1;
+	}
+	catch (std::invalid_argument& e)
+	{
+		printf("EXCEPTION: %s ",e.what() );
+		return -1;
+	}
+	
+	
 }
 
 
 void DisplayMgr::displayStartupScreen(bool redraw){
 	
+ 
+	_vfd.clearScreen();
+	 
+	TRY(_vfd.setCursor(10,14));
+	
+	TRY(_vfd.setCursor(10,14));
+	TRY(_vfd.setFont(VFD::FONT_5x7));
+	TRY(_vfd.write("Starting UP"));
+	
 	printf("displayStartupScreen %s\n",redraw?"REDRAW":"");
 }
 
 void DisplayMgr::displayTimeScreen(bool redraw){
+	time_t now = time(NULL);
+	struct tm *t = localtime(&now);
+	char buffer[128] = {0};
+	
+	_vfd.clearScreen();
+	
+	std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
+	
+	TRY(_vfd.setCursor(10,14));
+	
+	TRY(_vfd.setFont(VFD::FONT_10x14));
+	TRY(_vfd.write(buffer));
+ 
 	printf("displayTimeScreen %s\n",redraw?"REDRAW":"");
 
 }

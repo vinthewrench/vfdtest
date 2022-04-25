@@ -136,6 +136,16 @@ bool VFD::setCursor(uint8_t x, uint8_t y){
 
 }
 
+
+bool VFD::clearScreen(){
+	
+	uint8_t buffer[] = {0x11, 0,0, 63, 127};
+
+	return  writePacket(buffer, sizeof(buffer), 50);
+}
+}
+
+
 bool VFD::write(const char* str){
 	return  writePacket( (uint8_t *) str, strlen(str), 500);
 
