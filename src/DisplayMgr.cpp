@@ -236,12 +236,12 @@ void DisplayMgr::DisplayUpdate(){
 			timersub(&now, &_lastEventTime, &diff);
 			
 			if(_current_mode == MODE_STARTUP) {
-				if(diff.tv_sec >=  5) {
+				if(diff.tv_sec >=  3) {
 					pushMode(MODE_TIME);
 					shouldRedraw = true;
 				}
 			}
-			else if(diff.tv_sec >=  4){
+			else if(diff.tv_sec >=  2){
 				// should we pop the mode?
 				if(!isStickyMode(_current_mode)){
 					popMode();
