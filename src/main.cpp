@@ -27,6 +27,7 @@
 //#include "INA219.hpp"
 #include "QwiicTwist.hpp"
 
+#include "DisplayMgr.hpp"
 
 bool getCPUTemp(double & tempOut) {
 	bool didSucceed = false;
@@ -65,6 +66,40 @@ int main(int argc, const char * argv[]) {
 	//	INA219	in219;
 	QwiicTwist	twist;
 	
+	DisplayMgr display;
+	
+	sleep(2);
+
+	for(int i = 0; i < 20; i++){
+		
+		if(i == 1)
+			display.showVolumeChange();
+		if(i == 2){
+			display.showVolumeChange(); usleep(1);
+			display.showVolumeChange();  usleep(1);
+			display.showVolumeChange(); usleep(1);
+			display.showVolumeChange(); usleep(1);
+		}
+		if(i == 4){
+			display.showRadioChange();
+			sleep(2);
+		}
+		
+		if(i == 5)
+			display.showVolumeChange();
+ 
+		if(i == 7){
+			display.showRadioChange();
+			sleep(2);
+		}
+
+ 	sleep(1);
+
+	}
+ 
+	
+	return EXIT_SUCCESS;
+
 	try {
 		uint8_t dimLevel = 4;
 		

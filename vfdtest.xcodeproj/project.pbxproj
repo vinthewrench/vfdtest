@@ -15,6 +15,7 @@
 		2E62A86E280778E300F5066B /* INA219.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A86C2807766C00F5066B /* INA219.cpp */; };
 		2E62A8712807908900F5066B /* QwiicTwist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A86F28078D9F00F5066B /* QwiicTwist.cpp */; };
 		2E62A874280A4ED200F5066B /* MicroNMEA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A872280A4E9D00F5066B /* MicroNMEA.cpp */; };
+		2E62A8EB2817025B00F5066B /* DisplayMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E62A8E92817008500F5066B /* DisplayMgr.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,6 +51,8 @@
 		2E62A87028078D9F00F5066B /* QwiicTwist.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = QwiicTwist.hpp; sourceTree = "<group>"; };
 		2E62A872280A4E9D00F5066B /* MicroNMEA.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MicroNMEA.cpp; sourceTree = "<group>"; };
 		2E62A873280A4E9D00F5066B /* MicroNMEA.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MicroNMEA.hpp; sourceTree = "<group>"; };
+		2E62A8E92817008500F5066B /* DisplayMgr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DisplayMgr.cpp; sourceTree = "<group>"; };
+		2E62A8EA2817008500F5066B /* DisplayMgr.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DisplayMgr.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +89,8 @@
 				2E62A851280735DA00F5066B /* main.cpp */,
 				2E62A8642807383700F5066B /* ErrorMgr.cpp */,
 				2E62A8652807383700F5066B /* ErrorMgr.hpp */,
+				2E62A8E92817008500F5066B /* DisplayMgr.cpp */,
+				2E62A8EA2817008500F5066B /* DisplayMgr.hpp */,
 				2E62A85B2807375300F5066B /* I2C.cpp */,
 				2E62A85C2807375300F5066B /* I2C.hpp */,
 				2E62A85D2807375300F5066B /* TMP117.cpp */,
@@ -176,6 +181,7 @@
 				2E62A8612807375300F5066B /* I2C.cpp in Sources */,
 				2E62A8662807383700F5066B /* ErrorMgr.cpp in Sources */,
 				2E62A852280735DA00F5066B /* main.cpp in Sources */,
+				2E62A8EB2817025B00F5066B /* DisplayMgr.cpp in Sources */,
 				2E62A8712807908900F5066B /* QwiicTwist.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -297,6 +303,7 @@
 		2E62A856280735DA00F5066B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PDXWT4JFG9;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -307,6 +314,7 @@
 		2E62A857280735DA00F5066B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PDXWT4JFG9;
 				ENABLE_HARDENED_RUNTIME = YES;

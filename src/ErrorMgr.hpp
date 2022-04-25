@@ -5,8 +5,7 @@
 //  Created by Vincent Moscaritolo on 2/27/22.
 //
 
-#ifndef ErrorMgr_hpp
-#define ErrorMgr_hpp
+#pragma once
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -70,4 +69,3 @@ private:
 
 };
 
-#endif /* ErrorMgr_hpp */
