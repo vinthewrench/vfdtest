@@ -14,6 +14,10 @@
 #include <bitset>
 #include <sys/time.h>
 
+#include "VFD.hpp"
+#include "ErrorMgr.hpp"
+#include "CommonDefs.hpp"
+
 using namespace std;
  
 
@@ -43,7 +47,14 @@ public:
 	DisplayMgr();
 	~DisplayMgr();
 	
+	bool begin(string path, speed_t speed =  B19200);
+	bool begin(string path, speed_t speed, int &error);
+	void stop();
+
+	 bool reset();
 		
+	bool setBrightness(uint8_t level);  // 0-7
+
 	void showTime();
 	void showDiag();
 
@@ -94,8 +105,12 @@ private:
 	
 	static DisplayMgr *sharedInstance;
  
-	
+	// display
+	bool 		_isSetup = false;
+	VFD 		_vfd;
+
 	// debug stuff
+	
 	
 	string modeString();
 

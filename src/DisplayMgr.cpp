@@ -25,9 +25,50 @@ DisplayMgr::~DisplayMgr(){
 	
 	_event |= DISPLAY_EVENT_EXIT;
 	pthread_cond_signal(&_cond);
-
 	pthread_join(_updateTID, NULL);
 }
+
+
+bool DisplayMgr::begin(string path, speed_t speed){
+	int error = 0;
+
+	return begin(path, speed, error);
+}
+
+bool DisplayMgr::begin(string path, speed_t speed,  int &error){
+	
+	_isSetup = false;
+	
+	if(!_vfd.begin(path,speed,error))
+		throw Exception("failed to setup VFD ");
+	
+	_vfd.reset();
+	
+	return _isSetup;
+}
+
+
+void DisplayMgr::stop(){
+ 
+	if(_isSetup){
+		_vfd.stop();
+	}
+	
+	_isSetup = false;
+}
+
+// MARK: -  display tools
+
+bool DisplayMgr::setBrightness(uint8_t level) {
+	
+	bool success = false;
+	if(_isSetup){
+		_vfd.setBrightness(level);
+	}
+	
+	return success;
+}
+
 
 // MARK: -  change modes
 

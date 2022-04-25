@@ -11,7 +11,7 @@ set(SOURCES
 	src/ErrorMgr.cpp
 	src/I2C.cpp
 	src/TMP117.cpp
-	src/INA219.cpp
+#	src/INA219.cpp
 #	src/WittyPi3.cpp
 	src/QwiicTwist.cpp
 	src/VFD.cpp
