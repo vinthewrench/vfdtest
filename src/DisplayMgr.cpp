@@ -65,7 +65,7 @@ bool DisplayMgr::setBrightness(uint8_t level) {
 	
 	bool success = false;
 	if(_isSetup){
-		_vfd.setBrightness(level);
+		success = _vfd.setBrightness(level);
 	}
 	
 	return success;
