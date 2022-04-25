@@ -85,7 +85,8 @@ printf("FAIL AT line: %d\n", __LINE__ ); \
 }
 		
 		while(true){
-			
+			bool clicked = false;
+		//
 			usleep(1);
 			
 			if(twist.isClicked(clicked) && clicked) break;
