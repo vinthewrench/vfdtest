@@ -21,6 +21,21 @@
 using namespace std;
  
 
+constexpr string_view DS_KEY_OUTSIDE_TEMP	= "temp1";
+
+
+class DisplayDataSource {
+public:
+
+	DisplayDataSource(){}
+	virtual ~DisplayDataSource() {}
+ 
+	virtual bool getStringForKey(string_view key,  string &result) { return false;};
+	virtual bool getFloatForKey(string_view key,  float &result) { return false;};
+	virtual bool getIntForKey(string_view key,  int &result) { return false;};
+};
+
+
 class DisplayMgr {
 	
 	typedef enum  {
@@ -30,8 +45,7 @@ class DisplayMgr {
 		MODE_VOLUME,
 		MODE_RADIO,
 		MODE_DIAG,
-	
-		MODE_SHUTDOWN,		// shutdown 
+		MODE_SHUTDOWN,		// shutdown
 
 	}mode_state_t;
 
@@ -46,6 +60,8 @@ public:
 
 	DisplayMgr();
 	~DisplayMgr();
+	
+	void setDataSource(DisplayDataSource * datasource) { _dataSource = datasource;};
 	
 	bool begin(string path, speed_t speed =  B19200);
 	bool begin(string path, speed_t speed, int &error);
@@ -87,8 +103,6 @@ private:
 	// C wrappers for DisplayUpdate;
 	static void* DisplayUpdateThread(void *context);
 	static void DisplayUpdateThreadCleanup(void *context);
-	
-
 
 #define DISPLAY_EVENT_STARTUP	0x0002
 #define DISPLAY_EVENT_EXIT 	0x0004
@@ -106,9 +120,9 @@ private:
 	static DisplayMgr *sharedInstance;
  
 	// display
-	bool 		_isSetup = false;
-	VFD 		_vfd;
-
+	bool 					_isSetup = false;
+	VFD 					_vfd;
+	DisplayDataSource	*_dataSource;
 	// debug stuff
 	
 	

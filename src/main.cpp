@@ -55,6 +55,41 @@ bool getCPUTemp(double & tempOut) {
 }
 
 
+class RadioDataSource: public DisplayDataSource{
+public:
+
+	RadioDataSource(TMP117*, QwiicTwist* );
+//	virtual ~DisplayDataSource() {}
+//
+//	virtual bool getStringForKey(string_view key,  string &result) { return false;};
+ 	virtual bool getFloatForKey(string_view key,  float &result);
+//	virtual bool getIntForKey(string_view key,  int &result) { return false;};
+	
+private:
+	TMP117 		*_tmp117 = NULL;
+	QwiicTwist	*_vol = NULL;
+
+};
+
+RadioDataSource::RadioDataSource( TMP117* temp, QwiicTwist* vol){
+	_vol = vol;
+	_tmp117 = temp;
+}
+
+bool RadioDataSource::getFloatForKey(string_view key,  float &result){
+	
+	if(key == DS_KEY_OUTSIDE_TEMP){
+		float temp = 0;
+		if(_tmp117->readTempF(temp)) {
+			result = temp;
+			return  true;
+		}
+	}
+	
+	return false;
+	
+}
+
 int main(int argc, const char * argv[]) {
 	
 	
@@ -62,15 +97,17 @@ int main(int argc, const char * argv[]) {
 	TMP117 		tmp117;
 	QwiicTwist	twist;
 	
+	RadioDataSource source(&tmp117, &twist);
 
 	try {
-		uint8_t dimLevel = 4;
-		
+ 
 		printf("Test start\n");
 		
 		if(!display.begin("/dev/ttySC0",B57600))
 			throw Exception("failed to setup Display ");
 	
+		display.setDataSource(&source);
+		
 		if(!display.setBrightness(5))
 			throw Exception("failed to set brightness ");
 	

@@ -11,6 +11,8 @@
 #include <time.h>
 #include <sys/time.h>
 #include <iostream>
+#include <stdlib.h>
+#include <cmath>
 
 #define TRY(_statement_) if(!(_statement_)) { \
 printf("FAIL AT line: %d\n", __LINE__ ); \
@@ -323,8 +325,6 @@ void DisplayMgr::displayUpdate(bool redraw){
 		printf("EXCEPTION: %s ",e.what() );
 	 
 	}
-	
-	
 }
 
 
@@ -334,9 +334,9 @@ void DisplayMgr::displayStartupScreen(bool redraw){
 	if(redraw)
 		_vfd.clearScreen();
 	
-	TRY(_vfd.setCursor(10,14));
+	TRY(_vfd.setCursor(14,40));
 	TRY(_vfd.setFont(VFD::FONT_5x7));
-	TRY(_vfd.write("Starting UP"));
+	TRY(_vfd.write("Starting Up..."));
 	
 //	printf("displayStartupScreen %s\n",redraw?"REDRAW":"");
 }
@@ -349,15 +349,28 @@ void DisplayMgr::displayTimeScreen(bool redraw){
 	if(redraw)
 		_vfd.clearScreen();
 
-	std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
+	std::strftime(buffer, sizeof(buffer)-1, "%2l:%M:%S", t);
 	
-	TRY(_vfd.setCursor(10,22));
-	
+	TRY(_vfd.setCursor(14,40));
 	TRY(_vfd.setFont(VFD::FONT_10x14));
 	TRY(_vfd.write(buffer));
- 
-//	printf("displayTimeScreen %s\n",redraw?"REDRAW":"");
 
+	TRY(_vfd.setFont(VFD::FONT_5x7));
+	TRY(_vfd.write( (t->tm_hour > 12)?"PM":"AM"));
+	
+	float temp = 0;
+	if(_dataSource
+			&& _dataSource->getFloatForKey(DS_KEY_OUTSIDE_TEMP, temp)){
+		
+		char buffer[128] = {0};
+		
+			TRY(_vfd.setCursor(10, 55));
+			TRY(_vfd.setFont(VFD::FONT_5x7));
+			sprintf(buffer, "%3d\xA0\x46", (int) round(temp) );
+			TRY(_vfd.write(buffer));
+	}
+		
+		
 }
 
 void DisplayMgr::displayVolumeScreen(bool redraw){
