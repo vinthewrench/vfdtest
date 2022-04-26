@@ -94,11 +94,11 @@ bool RadioDataSource::getFloatForKey(string_view key,  float &result){
 		if(_vol->getDiff(twistCount, true)) {
 			
 				int newLevel = current_volume + twistCount;
-				if(newLevel > 10) newLevel = 10;
+				if(newLevel > 20) newLevel = 20;
 				if(newLevel < 0) newLevel = 0;
 				current_volume = newLevel;
 			
-			result =  current_volume / 10.0;
+			result =  current_volume /20.0;
 			
 			return  true;
 		}

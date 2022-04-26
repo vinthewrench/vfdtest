@@ -374,11 +374,9 @@ void DisplayMgr::displayTimeScreen(bool redraw){
 }
 
 void DisplayMgr::displayVolumeScreen(bool redraw){
-	printf("displayVolumeScreen %s\n",redraw?"REDRAW":"");
-
+	
 	if(redraw)
 		_vfd.clearScreen();
-	 	
 	
 	float vol = 0;
 	if(_dataSource
@@ -388,10 +386,9 @@ void DisplayMgr::displayVolumeScreen(bool redraw){
 
 		TRY(_vfd.setCursor(10,14));
 		TRY(_vfd.setFont(VFD::FONT_5x7));
-		sprintf(buffer, "Volume: %d%%",  (int) round(vol) );
+		sprintf(buffer, "Volume: %3d%%",  (int) round(vol * 100) );
 		TRY(_vfd.write(buffer));
 	}
-
 }
 
 void DisplayMgr::displayRadioScreen(bool redraw){
