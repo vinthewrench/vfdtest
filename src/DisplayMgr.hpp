@@ -22,6 +22,7 @@ using namespace std;
  
 
 constexpr string_view DS_KEY_OUTSIDE_TEMP	= "temp1";
+constexpr string_view DS_KEY_RADIO_VOLUME	= "vol";
 
 
 class DisplayDataSource {

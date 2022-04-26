@@ -85,9 +85,26 @@ bool RadioDataSource::getFloatForKey(string_view key,  float &result){
 			return  true;
 		}
 	}
-	
+ 
+	if(key == DS_KEY_RADIO_VOLUME){
+		int16_t twistCount = 0;
+		
+		static int16_t current_volume = 0;
+		
+		if(_vol->getDiff(twistCount, true)) {
+			
+				int newLevel = current_volume + twistCount;
+				if(newLevel > 10) newLevel = 10;
+				if(newLevel < 0) newLevel = 0;
+				current_volume = newLevel;
+			
+			result =  current_volume / 10.0;
+			
+			return  true;
+		}
+	}
+ 
 	return false;
-	
 }
 
 int main(int argc, const char * argv[]) {

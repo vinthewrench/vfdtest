@@ -362,7 +362,7 @@ void DisplayMgr::displayTimeScreen(bool redraw){
 	if(_dataSource
 			&& _dataSource->getFloatForKey(DS_KEY_OUTSIDE_TEMP, temp)){
 		
-		char buffer[128] = {0};
+		char buffer[64] = {0};
 		
 			TRY(_vfd.setCursor(10, 55));
 			TRY(_vfd.setFont(VFD::FONT_5x7));
@@ -379,9 +379,18 @@ void DisplayMgr::displayVolumeScreen(bool redraw){
 	if(redraw)
 		_vfd.clearScreen();
 	 	
-	TRY(_vfd.setCursor(10,14));
-	TRY(_vfd.setFont(VFD::FONT_5x7));
-	TRY(_vfd.write("Volume Change"));
+	
+	float vol = 0;
+	if(_dataSource
+			&& _dataSource->getFloatForKey(DS_KEY_RADIO_VOLUME, vol)){
+
+		char buffer[64] = {0};
+
+		TRY(_vfd.setCursor(10,14));
+		TRY(_vfd.setFont(VFD::FONT_5x7));
+		sprintf(buffer, "Volume: %d%%",  (int) round(vol) );
+		TRY(_vfd.write(buffer));
+	}
 
 }
 
