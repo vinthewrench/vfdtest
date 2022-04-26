@@ -375,21 +375,53 @@ void DisplayMgr::displayTimeScreen(bool redraw){
 
 void DisplayMgr::displayVolumeScreen(bool redraw){
 	
-	if(redraw)
-		_vfd.clearScreen();
+	constexpr uint8_t rightbox 	= 14;
+	constexpr uint8_t leftbox 	= 113;
+	constexpr uint8_t topbox 	= 34;
+	constexpr uint8_t bottombox = 44;
 	
-	float vol = 0;
-	if(_dataSource
+	constexpr uint8_t VFD_OUTLINE = 0x14;
+	constexpr uint8_t VFD_CLEAR_AREA = 0x12;
+	constexpr uint8_t VFD_SET_AREA = 0x11;
+	
+	try{
+		if(redraw){
+			_vfd.clearScreen();
+			
+			// draw centered heading
+			_vfd.setFont(VFD::FONT_5x7);
+			string str = "Volume";
+			_vfd.setCursor(( (128 - (str.size()*6)) /2 ), 29);
+			_vfd.write(str);
+			
+			//draw box outline
+			uint8_t buff1[] = {VFD_OUTLINE,rightbox,topbox,leftbox,bottombox};
+			_vfd.writePacket(buff1, sizeof(buff1), 0);
+		}
+		
+		float vol = 0;
+		if(_dataSource
 			&& _dataSource->getFloatForKey(DS_KEY_RADIO_VOLUME, vol)){
-
-		char buffer[64] = {0};
-
-		TRY(_vfd.setCursor(10,14));
-		TRY(_vfd.setFont(VFD::FONT_5x7));
-		sprintf(buffer, "Volume: %3d%%",  (int) round(vol * 100) );
-		TRY(_vfd.write(buffer));
+			
+			
+			uint8_t rndVol =  (int) round(vol * 100);
+			uint8_t midBox =  ((uint8_t) round((leftbox - rightbox) * vol)) + rightbox - 1;
+			
+			// fill volume area box
+			uint8_t buff3[] = {VFD_SET_AREA,rightbox,topbox+1,midBox,bottombox-1};
+			_vfd.writePacket(buff3, sizeof(buff3), 0);
+			
+			// clear rest of inside of box
+			if(rndVol < 100){
+				uint8_t buff2[] = {VFD_CLEAR_AREA, static_cast<uint8_t>(midBox+1),topbox+1,leftbox-1,bottombox-1};
+				_vfd.writePacket(buff2, sizeof(buff2), 0);
+			}
+		}
+	} catch (...) {
+		// ignore fail
 	}
-}
+ }
+
 
 void DisplayMgr::displayRadioScreen(bool redraw){
 	printf("display RadioScreen %s\n",redraw?"REDRAW":"");

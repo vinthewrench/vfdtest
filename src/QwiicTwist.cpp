@@ -57,10 +57,13 @@ bool QwiicTwist::begin(uint8_t deviceAddress){
 
 bool QwiicTwist::begin(uint8_t deviceAddress,   int &error){
 	
-	if( _i2cPort.begin(deviceAddress, error) ) {
+	if( _i2cPort.begin(deviceAddress, error)
+		&& _i2cPort.writeWord(TWIST_COUNT, 0)
+		&& _i2cPort.writeByte(TWIST_STATUS,  0) ) {
 		_isSetup = true;
 	}
 	
+ 
 	return _isSetup;
 }
 
