@@ -163,9 +163,7 @@ bool VFD:: write(string str){
 bool VFD:: writePacket(const uint8_t * data, size_t len, useconds_t waitusec){
 	
 	bool success = false;
-	
-	
-		
+ 
 #if PACKET_MODE
 	constexpr size_t blocksize = 32;
 	uint8_t buffer[blocksize + 4 ];

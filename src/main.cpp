@@ -176,10 +176,7 @@ int main(int argc, const char * argv[]) {
 #define TRY(_statement_) if(!(_statement_)) { \
 printf("FAIL AT line: %d\n", __LINE__ ); \
 }
-		
-		int mode = 0;
-		
-		while(true){
+		 		while(true){
 			bool clicked = false;
 			bool moved = false;
 			//
@@ -191,12 +188,8 @@ printf("FAIL AT line: %d\n", __LINE__ ); \
 			}
 			
 			if(twist.isClicked(clicked) && clicked) {
-				mode++;
-				if((mode &1) == 1)
-					display.showRadioChange();
-				else
-					display.showTime();
-
+	 				display.showRadioChange();
+	 
 			}
 			
 			usleep(1);

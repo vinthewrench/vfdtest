@@ -18,14 +18,25 @@
 printf("FAIL AT line: %d\n", __LINE__ ); \
 }
 
+std::string  freq_string(double hz){
+	
+ 	if(hz >= 2.0e6) { // Mhz
+		return "Mhz";
+	} else if(hz >= 1.0e3) {
+		return "Khz";
+	}
+	
+	return "";
+}
+
 std::string  hertz_to_string(double hz, int precision = 1){
 	
 	char buffer[128] = {0};
  
 	if(hz >= 2.0e6) { // Mhz
-		sprintf(buffer, "%0.*f MHz", precision, hz/1.0e6);
+		sprintf(buffer, "%0.*f", precision, hz/1.0e6);
 	} else if(hz >= 1.0e3) {
-		sprintf(buffer, "%d KHz", (int)round( hz/1.0e3));
+		sprintf(buffer, "%d", (int)round( hz/1.0e3));
 	}
 	
 	return string(buffer);
@@ -460,13 +471,17 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 				case MM_BROADCAST_FM: precision = 1;break;
 				case MM_FM: precision = 3; break;
 				default :;
-	 			}
+				}
 			
 			string str = hertz_to_string(freq, precision);
-			
+			string hzstr = freq_string(freq);
+
 			TRY(_vfd.setCursor(10,35));
 			TRY(_vfd.setFont(VFD::FONT_10x14));
 			TRY(_vfd.write(str));
+			TRY(_vfd.setFont(VFD::FONT_5x7));
+			TRY(_vfd.write(hzstr));
+
 
 		}
 	} catch (...) {
