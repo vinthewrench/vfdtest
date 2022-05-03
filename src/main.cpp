@@ -157,7 +157,7 @@ int main(int argc, const char * argv[]) {
 
 	try {
 		
-		if(!display.begin("/dev/ttyUSB0",B38400))
+		if(!display.begin("/dev/ttyUSB0",B9600))
 			throw Exception("failed to setup Display ");
 		
 		display.setDataSource(&source);
