@@ -118,12 +118,12 @@ int main(int argc, const char * argv[]) {
 	
 	try {
 		
-		if(!display.begin("/dev/ttySC0",B57600))
+		if(!display.begin("/dev/ttyUSB0",B38400))
 			throw Exception("failed to setup Display ");
 		
 		display.setDataSource(&source);
 		
-		if(!display.setBrightness(5))
+		if(!display.setBrightness(7))
 			throw Exception("failed to set brightness ");
 		
 		if(!tmp117.begin(0x4A))

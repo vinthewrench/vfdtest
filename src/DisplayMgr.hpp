@@ -79,16 +79,16 @@ public:
 	void showVolumeChange();
 	void showRadioChange();
 
-	void displayUpdate(bool redraw);
+	void drawCurrentMode(bool redraw);
 	
 private:
   
-	void displayStartupScreen(bool redraw);
-	void displayTimeScreen(bool redraw);
-	void displayVolumeScreen(bool redraw);
-	void displayRadioScreen(bool redraw);
-	void displayDiagScreen(bool redraw);
-	void displayInternalError(bool redraw);
+	void drawStartupScreen(bool redraw);
+	void drawTimeScreen(bool redraw);
+	void drawVolumeScreen(bool redraw);
+	void drawRadioScreen(bool redraw);
+	void drawDiagScreen(bool redraw);
+	void drawInternalError(bool redraw);
 
 	mode_state_t _current_mode = MODE_UNKNOWN;
 	mode_state_t _saved_mode   = MODE_UNKNOWN;

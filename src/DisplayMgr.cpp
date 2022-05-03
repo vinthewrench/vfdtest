@@ -127,7 +127,7 @@ string DisplayMgr::modeString(){
 		case MODE_RADIO: return("MODE_RADIO");
 		case MODE_DIAG: return("MODE_DIAG");
 		case MODE_SHUTDOWN: return("MODE_SHUTDOWN");
-		 	
+			
 	}
 	return "";
 }
@@ -183,7 +183,7 @@ void DisplayMgr::DisplayUpdate(){
 	
 	while(!shouldQuit){
 		
-	 	bool shouldRedraw = false;
+		bool shouldRedraw = false;
 
 		// --check if any events need processing else wait for a timeout
 		struct timespec ts = {0, 0};
@@ -252,8 +252,8 @@ void DisplayMgr::DisplayUpdate(){
 			}
 		}
 		
-		displayUpdate(shouldRedraw);
- 	}
+		drawCurrentMode(shouldRedraw);
+	}
 	
 }
 
@@ -284,7 +284,7 @@ void DisplayMgr::DisplayUpdateThreadCleanup(void *context){
 
 // MARK: -  Display Draw code
 
-void DisplayMgr::displayUpdate(bool redraw){
+void DisplayMgr::drawCurrentMode(bool redraw){
 	
 	if(!_isSetup)
 		return;
@@ -292,27 +292,27 @@ void DisplayMgr::displayUpdate(bool redraw){
 		switch (_current_mode) {
 				
 			case MODE_STARTUP:
-				displayStartupScreen(redraw);
+				drawStartupScreen(redraw);
 				break;
 				
 			case MODE_TIME:
-				displayTimeScreen(redraw);
+				drawTimeScreen(redraw);
 				break;
 				
 			case MODE_VOLUME:
-				displayVolumeScreen(redraw);
+				drawVolumeScreen(redraw);
 				break;
 				
 			case MODE_RADIO:
-				displayRadioScreen(redraw);
+				drawRadioScreen(redraw);
 				break;
 				
 			case MODE_DIAG:
-				displayDiagScreen(redraw);
+				drawDiagScreen(redraw);
 				
 				
 			default:
-				displayInternalError(redraw);
+				drawInternalError(redraw);
 		}
 		
 	}
@@ -328,7 +328,7 @@ void DisplayMgr::displayUpdate(bool redraw){
 }
 
 
-void DisplayMgr::displayStartupScreen(bool redraw){
+void DisplayMgr::drawStartupScreen(bool redraw){
 	
  
 	if(redraw)
@@ -341,7 +341,7 @@ void DisplayMgr::displayStartupScreen(bool redraw){
 //	printf("displayStartupScreen %s\n",redraw?"REDRAW":"");
 }
 
-void DisplayMgr::displayTimeScreen(bool redraw){
+void DisplayMgr::drawTimeScreen(bool redraw){
 	time_t now = time(NULL);
 	struct tm *t = localtime(&now);
 	char buffer[128] = {0};
@@ -351,7 +351,7 @@ void DisplayMgr::displayTimeScreen(bool redraw){
 
 	std::strftime(buffer, sizeof(buffer)-1, "%2l:%M:%S", t);
 	
-	TRY(_vfd.setCursor(14,40));
+	TRY(_vfd.setCursor(10,35));
 	TRY(_vfd.setFont(VFD::FONT_10x14));
 	TRY(_vfd.write(buffer));
 
@@ -373,12 +373,12 @@ void DisplayMgr::displayTimeScreen(bool redraw){
 		
 }
 
-void DisplayMgr::displayVolumeScreen(bool redraw){
+void DisplayMgr::drawVolumeScreen(bool redraw){
 	
-	constexpr uint8_t rightbox 	= 14;
-	constexpr uint8_t leftbox 	= 113;
-	constexpr uint8_t topbox 	= 34;
-	constexpr uint8_t bottombox = 44;
+	constexpr uint8_t rightbox 	= 13;
+	constexpr uint8_t leftbox 		= 112;
+	constexpr uint8_t topbox 		= 34;
+	constexpr uint8_t bottombox 	= 44;
 	
 	constexpr uint8_t VFD_OUTLINE = 0x14;
 	constexpr uint8_t VFD_CLEAR_AREA = 0x12;
@@ -391,7 +391,7 @@ void DisplayMgr::displayVolumeScreen(bool redraw){
 			// draw centered heading
 			_vfd.setFont(VFD::FONT_5x7);
 			string str = "Volume";
-			_vfd.setCursor(( (128 - (str.size()*6)) /2 ), 29);
+			_vfd.setCursor(( (126 - (str.size()*6)) /2 ), 29);
 			_vfd.write(str);
 			
 			//draw box outline
@@ -402,7 +402,6 @@ void DisplayMgr::displayVolumeScreen(bool redraw){
 		float vol = 0;
 		if(_dataSource
 			&& _dataSource->getFloatForKey(DS_KEY_RADIO_VOLUME, vol)){
-			
 			
 			uint8_t rndVol =  (int) round(vol * 100);
 			uint8_t midBox =  ((uint8_t) round((leftbox - rightbox) * vol)) + rightbox - 1;
@@ -423,18 +422,18 @@ void DisplayMgr::displayVolumeScreen(bool redraw){
  }
 
 
-void DisplayMgr::displayRadioScreen(bool redraw){
+void DisplayMgr::drawRadioScreen(bool redraw){
 	printf("display RadioScreen %s\n",redraw?"REDRAW":"");
 
 }
 
-void DisplayMgr::displayDiagScreen(bool redraw){
+void DisplayMgr::drawDiagScreen(bool redraw){
 	printf("displayDiagScreen %s\n",redraw?"REDRAW":"");
 
 }
 
 
-void DisplayMgr::displayInternalError(bool redraw){
+void DisplayMgr::drawInternalError(bool redraw){
 	
 	printf("displayInternalError %s\n",redraw?"REDRAW":"");
 }
