@@ -27,7 +27,7 @@
 #include "TMP117.hpp"
 #include "QwiicTwist.hpp"
 
-bool getCPUTemp(double & tempOut) {
+bool getCPUTemp(float & tempOut) {
 	bool didSucceed = false;
 	
 	try{
@@ -39,7 +39,7 @@ bool getCPUTemp(double & tempOut) {
 				string val;
 				ifs >> val;
 				ifs.close();
-				double temp = std::stod(val);
+				float temp = std::stof(val);
 				temp = temp /1000.0;
 				tempOut = temp;
 			}
@@ -55,15 +55,18 @@ bool getCPUTemp(double & tempOut) {
 }
 
 
+
+
 class RadioDataSource: public DisplayDataSource{
 public:
 	
 	RadioDataSource(TMP117*, QwiicTwist* );
 	//	virtual ~DisplayDataSource() {}
 	//
-	//	virtual bool getStringForKey(string_view key,  string &result) { return false;};
+	virtual bool getStringForKey(string_view key,  string &result);
 	virtual bool getFloatForKey(string_view key,  float &result);
-	//	virtual bool getIntForKey(string_view key,  int &result) { return false;};
+	virtual bool getDoubleForKey(string_view key,  double &result);
+	virtual bool getIntForKey(string_view key,  int &result);
 	
 private:
 	TMP117 		*_tmp117 = NULL;
@@ -76,6 +79,36 @@ RadioDataSource::RadioDataSource( TMP117* temp, QwiicTwist* vol){
 	_tmp117 = temp;
 }
 
+bool RadioDataSource::getStringForKey(string_view key,  string &result){
+ 
+	return false;
+}
+
+bool RadioDataSource::getIntForKey(string_view key,  int &result){
+	
+	if(key == DS_KEY_MODULATION_MODE){
+	 
+		result = MM_BROADCAST_AM;
+			return  true;
+ 	}
+ 
+	return false;
+}
+
+
+
+bool RadioDataSource::getDoubleForKey(string_view key,  double &result){
+	
+	if(key == DS_KEY_RADIO_FREQ){
+	 
+			result = 1440 * 1.0e3;
+			return  true;
+		 
+	}
+ 
+	return false;
+}
+
 bool RadioDataSource::getFloatForKey(string_view key,  float &result){
 	
 	if(key == DS_KEY_OUTSIDE_TEMP){
@@ -85,8 +118,7 @@ bool RadioDataSource::getFloatForKey(string_view key,  float &result){
 			return  true;
 		}
 	}
-	
-	if(key == DS_KEY_RADIO_VOLUME){
+	else if(key == DS_KEY_RADIO_VOLUME){
 		int16_t twistCount = 0;
 		
 		static int16_t current_volume = 0;
@@ -103,7 +135,14 @@ bool RadioDataSource::getFloatForKey(string_view key,  float &result){
 			return  true;
 		}
 	}
-	
+	else if(key == DS_KEY_CPU_TEMP){
+		float temp = 0;
+		if(getCPUTemp(temp)) {
+			result = temp;
+			return  true;
+		}
+	}
+ 
 	return false;
 }
 
@@ -115,7 +154,7 @@ int main(int argc, const char * argv[]) {
 	QwiicTwist	twist;
 	
 	RadioDataSource source(&tmp117, &twist);
-	
+
 	try {
 		
 		if(!display.begin("/dev/ttyUSB0",B38400))
@@ -138,6 +177,8 @@ int main(int argc, const char * argv[]) {
 printf("FAIL AT line: %d\n", __LINE__ ); \
 }
 		
+		int mode = 0;
+		
 		while(true){
 			bool clicked = false;
 			bool moved = false;
@@ -149,7 +190,14 @@ printf("FAIL AT line: %d\n", __LINE__ ); \
 				display.showVolumeChange();
 			}
 			
-			if(twist.isClicked(clicked) && clicked) break;
+			if(twist.isClicked(clicked) && clicked) {
+				mode++;
+				if((mode &1) == 1)
+					display.showRadioChange();
+				else
+					display.showTime();
+
+			}
 			
 			usleep(1);
 		};

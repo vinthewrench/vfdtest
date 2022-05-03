@@ -22,7 +22,19 @@ using namespace std;
  
 
 constexpr string_view DS_KEY_OUTSIDE_TEMP	= "temp1";
+constexpr string_view DS_KEY_CPU_TEMP		= "tempcpu";
+
 constexpr string_view DS_KEY_RADIO_VOLUME	= "vol";
+constexpr string_view DS_KEY_RADIO_FREQ	= "freq";
+constexpr string_view DS_KEY_MODULATION_MODE	= "mode";
+
+typedef enum :int {
+	MM_UNKNOWN = 0,
+	MM_BROADCAST_AM,
+	MM_BROADCAST_FM,
+	MM_FM,
+
+}modulation_mode_t;
 
 
 class DisplayDataSource {
@@ -34,6 +46,8 @@ public:
 	virtual bool getStringForKey(string_view key,  string &result) { return false;};
 	virtual bool getFloatForKey(string_view key,  float &result) { return false;};
 	virtual bool getIntForKey(string_view key,  int &result) { return false;};
+	virtual bool getDoubleForKey(string_view key,  double &result)  { return false;};
+
 };
 
 

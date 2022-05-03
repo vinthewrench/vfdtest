@@ -18,6 +18,19 @@
 printf("FAIL AT line: %d\n", __LINE__ ); \
 }
 
+std::string  hertz_to_string(double hz, int precision = 1){
+	
+	char buffer[128] = {0};
+ 
+	if(hz >= 2.0e6) { // Mhz
+		sprintf(buffer, "%0.*f MHz", precision, hz/1.0e6);
+	} else if(hz >= 1.0e3) {
+		sprintf(buffer, "%d KHz", (int)round( hz/1.0e3));
+	}
+	
+	return string(buffer);
+}
+
 DisplayMgr *DisplayMgr::sharedInstance = NULL;
 
 typedef void * (*THREADFUNCPTR)(void *);
@@ -423,8 +436,42 @@ void DisplayMgr::drawVolumeScreen(bool redraw){
 
 
 void DisplayMgr::drawRadioScreen(bool redraw){
-	printf("display RadioScreen %s\n",redraw?"REDRAW":"");
+//	printf("display RadioScreen %s\n",redraw?"REDRAW":"");
 
+	try{
+		if(redraw){
+			_vfd.clearScreen();
+			
+		}
+		
+		double freq = 0;
+		int temp;
+		
+
+		if(_dataSource
+			&& _dataSource->getDoubleForKey(DS_KEY_RADIO_FREQ, freq)
+			&& _dataSource->getIntForKey(DS_KEY_MODULATION_MODE, temp)
+			){
+				modulation_mode_t mode = (modulation_mode_t) temp;
+				
+			int precision = 0;
+			switch (mode) {
+				case MM_BROADCAST_AM: precision = 0;break;
+				case MM_BROADCAST_FM: precision = 1;break;
+				case MM_FM: precision = 3; break;
+				default :;
+	 			}
+			
+			string str = hertz_to_string(freq, precision);
+			
+			TRY(_vfd.setCursor(10,35));
+			TRY(_vfd.setFont(VFD::FONT_10x14));
+			TRY(_vfd.write(str));
+
+		}
+	} catch (...) {
+		// ignore fail
+	}
 }
 
 void DisplayMgr::drawDiagScreen(bool redraw){
