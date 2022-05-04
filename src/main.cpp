@@ -93,6 +93,12 @@ bool RadioDataSource::getIntForKey(string_view key,  int &result){
 		result = radio->radioMode();
 		return  true;
 	}
+	else if(key == DS_KEY_MODULATION_MUX){
+	 
+		RadioMgr*	radio = RadioMgr::shared();
+		result = radio->radioMuxMode();
+		return  true;
+	}
  
 	return false;
 }
@@ -204,7 +210,7 @@ int main(int argc, const char * argv[]) {
 					radio->setRadioMode(RadioMgr::RADIO_OFF);
 				}
 				else {
-					radio->setRadioMode(RadioMgr::VHF);
+					radio->setRadioMode(RadioMgr::BROADCAST_FM);
 				}
 				display->showRadioChange();
 				

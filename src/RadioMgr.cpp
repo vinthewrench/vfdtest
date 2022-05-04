@@ -12,7 +12,8 @@ RadioMgr *RadioMgr::sharedInstance = NULL;
 
 RadioMgr::RadioMgr(){
 	_mode = RADIO_OFF;
-	
+	_mux = MUX_MONO;
+
  }
 
 
@@ -28,6 +29,11 @@ bool RadioMgr::setRadioMode(radio_mode_t newMode){
 bool RadioMgr::setFrequency(double newFreq){
 	if(newFreq != _frequency){
 		_frequency = newFreq;
+
+		// DEBUG
+		_mux = (_frequency == 103.5e6)? MUX_STEREO: MUX_MONO;
+		//DEBUG
+
 		return true;
 	}
 	return false;
@@ -35,7 +41,7 @@ bool RadioMgr::setFrequency(double newFreq){
  
 string RadioMgr::modeString(radio_mode_t mode){
  
-	string str = "  ";
+	string str = "   ";
 	switch (mode) {
 		case BROADCAST_AM:
 			str = "AM";
@@ -50,6 +56,24 @@ string RadioMgr::modeString(radio_mode_t mode){
 			break;
 			
 		default: ;
+	}
+ 
+	return str;
+}
+
+string RadioMgr::muxstring(radio_mux_t mux){
+ 
+	string str = "  ";
+	switch (mux) {
+		case MUX_STEREO:
+			str = "ST";
+			break;
+			
+		case MUX_QUAD:
+			str = "QD";
+			break;
+			
+		default: str = "       ";
 	}
  
 	return str;
@@ -92,7 +116,7 @@ double RadioMgr::nextFrequency(bool up){
 			else {
 				newfreq-=200.e3;
 			}
-			if(newfreq > 108.e6) newfreq = 108.e6;
+			if(newfreq > 108.1e6) newfreq = 108.1e6;
 			else if(newfreq < 88.1e6) newfreq =88.1e6;
 		break;
 
@@ -113,7 +137,7 @@ string  RadioMgr::hertz_to_string(double hz, int precision){
 	char buffer[128] = {0};
  
 	if(hz > 1710e3) { // Mhz
-		sprintf(buffer, "%3.*f", precision, hz/1.0e6);
+		sprintf(buffer, "%*.*f", precision+4, precision, hz/1.0e6);
 	} else if(hz >= 1.0e3) {
 		sprintf(buffer, "%4d", (int)round( hz/1.0e3));
 	}

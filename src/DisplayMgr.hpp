@@ -24,9 +24,10 @@ using namespace std;
 constexpr string_view DS_KEY_OUTSIDE_TEMP	= "temp1";
 constexpr string_view DS_KEY_CPU_TEMP		= "tempcpu";
 
-constexpr string_view DS_KEY_RADIO_VOLUME	= "vol";
-constexpr string_view DS_KEY_RADIO_FREQ	= "freq";
+constexpr string_view DS_KEY_RADIO_VOLUME		= "vol";
+constexpr string_view DS_KEY_RADIO_FREQ			= "freq";
 constexpr string_view DS_KEY_MODULATION_MODE	= "mode";
+constexpr string_view DS_KEY_MODULATION_MUX	=	 "mux";
 
 
 class DisplayDataSource {
@@ -39,7 +40,6 @@ public:
 	virtual bool getFloatForKey(string_view key,  float &result) { return false;};
 	virtual bool getIntForKey(string_view key,  int &result) { return false;};
 	virtual bool getDoubleForKey(string_view key,  double &result)  { return false;};
-
 };
 
 
@@ -53,9 +53,9 @@ class DisplayMgr {
 		MODE_RADIO,
 		MODE_DIAG,
 		MODE_SHUTDOWN,		// shutdown
-
 	}mode_state_t;
 
+	
 public:
 
 	  static DisplayMgr *shared() {
@@ -122,7 +122,7 @@ private:
 	uint16_t				_event = 0;
 	 
 	pthread_cond_t 	_cond = PTHREAD_COND_INITIALIZER;
- 	pthread_mutex_t 	_mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_t 	_mutex = PTHREAD_MUTEX_INITIALIZER;
 	pthread_t			_updateTID;
 	
 	static DisplayMgr *sharedInstance;

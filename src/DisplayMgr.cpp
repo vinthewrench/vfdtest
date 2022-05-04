@@ -456,13 +456,15 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 		}
 		
 		double freq = 0;
-		int temp;
+		int temp, temp1;
 	 
 		if(_dataSource
 			&& _dataSource->getDoubleForKey(DS_KEY_RADIO_FREQ, freq)
 			&& _dataSource->getIntForKey(DS_KEY_MODULATION_MODE, temp)
+			&& _dataSource->getIntForKey(DS_KEY_MODULATION_MUX, temp1)
 			){
 				RadioMgr::radio_mode_t mode = (RadioMgr::radio_mode_t) temp;
+				RadioMgr::radio_mux_t mux = (RadioMgr::radio_mux_t) temp1;
 				
 			int precision = 0;
 			int centerX = _vfd.width() /2;
@@ -478,6 +480,7 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 			string str = 	RadioMgr::hertz_to_string(freq, precision);
 			string hzstr =	RadioMgr::freqSuffixString(freq);
 			string modStr = RadioMgr::modeString(mode);
+			string muxstring = RadioMgr::muxstring(mux);
 			
 			auto freqCenter =  centerX - (str.size() * 11) + 18;
 			if(precision > 1)  freqCenter += 10*2;
@@ -488,14 +491,19 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 			else if  (precision == 1)
 				modeStart += 5;
 			 
-
 			TRY(_vfd.setFont(VFD::FONT_5x7));
-			TRY(_vfd.setCursor(modeStart, centerY+3));
+			TRY(_vfd.setCursor(modeStart, centerY-3));
 			TRY(_vfd.write(modStr));
+			
+			TRY(_vfd.setFont(VFD::FONT_MINI));
+			TRY(_vfd.setCursor(modeStart+3, centerY+5));
+			TRY(_vfd.write(muxstring));
 			
 			TRY(_vfd.setFont(VFD::FONT_10x14));
 			TRY(_vfd.setCursor( freqCenter ,centerY+5));
 			TRY(_vfd.write(str));
+
+			
 
 			TRY(_vfd.setFont(VFD::FONT_5x7));
 			TRY(_vfd.write( " " + hzstr));

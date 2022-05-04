@@ -28,8 +28,15 @@ public:
 		BROADCAST_AM,
 		BROADCAST_FM,
 		VHF,
-
 	}radio_mode_t;
+
+	typedef enum  {
+		MUX_UNKNOWN = 0,
+		MUX_MONO,
+		MUX_STEREO,
+		MUX_QUAD,
+	}radio_mux_t;
+
 
 	  static RadioMgr *shared() {
 		  if(!sharedInstance){
@@ -45,9 +52,12 @@ public:
 	static string  freqSuffixString(double hz);
 	static string  hertz_to_string(double hz, int precision = 1);
 	static string modeString(radio_mode_t);
+	static string muxstring(radio_mux_t);
 	
 	radio_mode_t radioMode() {return _mode;};
 	bool setRadioMode(radio_mode_t );
+
+	radio_mux_t radioMuxMode() {return _mux;};
  
 	double frequency() {return _frequency;};
 	bool setFrequency(double );
@@ -58,7 +68,8 @@ public:
 	
 	radio_mode_t 		_mode;
 	double				_frequency;
-	
+	radio_mux_t 		_mux;
+
 	static RadioMgr *sharedInstance;
  
 };
