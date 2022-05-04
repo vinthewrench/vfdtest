@@ -182,7 +182,7 @@ void DisplayMgr::DisplayUpdate(){
 	
 	constexpr time_t sleepTime = 1;
 	
-	printf("start DisplayUpdate\n");
+//	printf("start DisplayUpdate\n");
 	
 	while(!shouldQuit){
 		
@@ -304,7 +304,7 @@ void DisplayMgr::DisplayUpdateThreadCleanup(void *context){
 		
 	}
 
-	printf("cleanup display\n");
+//	printf("cleanup display\n");
 }
 
 // MARK: -  Display Draw code
@@ -466,6 +466,8 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 				RadioMgr::radio_mode_t mode = (RadioMgr::radio_mode_t) temp;
 				
 			int precision = 0;
+			int centerX = _vfd.width() >>1;
+			
 			switch (mode) {
 				case RadioMgr::BROADCAST_AM: precision = 0;break;
 				case RadioMgr::BROADCAST_FM: precision = 1;break;
@@ -477,9 +479,10 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 			string str =  RadioMgr::hertz_to_string(freq, precision);
 			string hzstr =  RadioMgr::freqSuffixString(freq);
 
-			TRY(_vfd.setCursor(10,35));
 			TRY(_vfd.setFont(VFD::FONT_10x14));
-			TRY(_vfd.write(str));
+			
+			TRY(_vfd.setCursor(10,35));
+		TRY(_vfd.write(str));
 			TRY(_vfd.setFont(VFD::FONT_5x7));
 			TRY(_vfd.write(hzstr));
 

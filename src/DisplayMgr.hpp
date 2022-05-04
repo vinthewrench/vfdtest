@@ -133,7 +133,6 @@ private:
 	DisplayDataSource	*_dataSource;
 	// debug stuff
 	
-	
 	string modeString();
 
 };

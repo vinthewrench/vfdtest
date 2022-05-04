@@ -17,6 +17,9 @@
 #include <string>
 
 
+//#define GU128x64D  1
+#define GU126x64F  1
+
 using namespace std;
 
 class VFD {
@@ -36,8 +39,7 @@ public:
   void stop();
 
  	bool reset();
-
-	
+ 
 	bool write(string str);
 	bool write(const char* str);
 	bool writePacket(const uint8_t *data , size_t len , useconds_t waitusec = 50);
@@ -46,8 +48,24 @@ public:
 
 	bool clearScreen();
 
-	bool setCursor(uint8_t x, uint8_t y); 
-	bool  setFont(font_t font);
+	bool setCursor(uint8_t x, uint8_t y);
+	bool setFont(font_t font);
+
+	inline int width() {
+#if GU126x64F
+	 		return 126;
+#elif GU128x64D
+ 		return 128;
+#endif
+ 	};
+	
+	inline int height() {
+#if GU126x64F
+			return 64;
+#elif GU128x64D
+		return 64;
+#endif
+	};
 
 private:
 	

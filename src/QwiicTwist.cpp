@@ -6,7 +6,7 @@
 //
 
 #include "QwiicTwist.hpp"
-
+#include <unistd.h>
 
 //Map to the various registers on the Twist
 enum encoderRegisters
@@ -176,8 +176,11 @@ bool QwiicTwist::isClicked(bool& val){
 		if(_i2cPort.readByte(TWIST_STATUS, status)){
 			val = status & (1 << statusButtonClickedBit);
 			
-			_i2cPort.writeByte(TWIST_STATUS,  status & ~(1 << statusButtonClickedBit));
-		}
+			if(val){
+				usleep(10000);  // debounce
+				_i2cPort.writeByte(TWIST_STATUS,  status & ~(1 << statusButtonClickedBit));
+			}
+	}
 		
 		success = true;
 	}
