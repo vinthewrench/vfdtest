@@ -52,6 +52,8 @@ public:
 	double frequency() {return _frequency;};
 	bool setFrequency(double );
 
+	double nextFrequency(bool up);
+	
 	private:
 	
 	radio_mode_t 		_mode;

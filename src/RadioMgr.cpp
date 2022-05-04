@@ -43,6 +43,41 @@ std::string  RadioMgr::freqSuffixString(double hz){
 	return "";
 }
 
+double RadioMgr::nextFrequency(bool up){
+	
+	double newfreq = _frequency;
+	
+	switch (_mode) {
+		case BROADCAST_AM:
+			// AM steps are 10khz
+			if(up) {
+				newfreq+=10.e3;
+			}
+			else {
+				newfreq+=10.e3;
+ 			}
+			if(newfreq > 1605e3) newfreq =1605e3;
+			else if(newfreq < 535e3) newfreq =535e3;
+		break;
+	
+		case BROADCAST_FM:
+			// AM steps are 200khz
+			if(up) {
+				newfreq+=200.e3;
+			}
+			else {
+				newfreq+=200.e3;
+			}
+			if(newfreq > 108.e6) newfreq = 108.e6;
+			else if(newfreq < 88.1e6) newfreq =88.1e6;
+		break;
+
+		default:
+			break;
+	}
+	return newfreq;
+}
+
  std::string  RadioMgr::hertz_to_string(double hz, int precision){
 	
 	char buffer[128] = {0};

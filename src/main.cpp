@@ -186,7 +186,18 @@ int main(int argc, const char * argv[]) {
 			
 			twist.isMoved(moved);
 			if(moved){
-				display->showVolumeChange();
+ 				int16_t twistCount = 0;
+					
+				if(twist.getDiff(twistCount, true)) {
+					auto newfreq = radio->nextFrequency(twistCount > 0);
+					radio->setFrequency(newfreq);
+					
+					if(radio->radioMode() != RadioMgr::RADIO_OFF){
+						display->showRadioChange();
+					}
+				}
+				
+					
 			}
 			
 			if(twist.isClicked(clicked) && clicked) {

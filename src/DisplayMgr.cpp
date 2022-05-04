@@ -453,7 +453,6 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 	try{
 		if(redraw){
 			_vfd.clearScreen();
-			
 		}
 		
 		double freq = 0;
@@ -474,22 +473,29 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 				case RadioMgr::BROADCAST_FM: precision = 1;break;
 				default :
 					precision = 3; break;
-
 				}
 			
 			string str =  RadioMgr::hertz_to_string(freq, precision);
 			string hzstr =  RadioMgr::freqSuffixString(freq);
 
-			
+			auto freqCenter =  centerX - (str.size() * 10) + 10;
+
 			TRY(_vfd.setFont(VFD::FONT_10x14));
-			
-			TRY(_vfd.setCursor( centerX - (str.size() /2)  ,centerY - 5));
+			TRY(_vfd.setCursor( freqCenter ,centerY+5));
 			TRY(_vfd.write(str));
 			TRY(_vfd.setFont(VFD::FONT_5x7));
-			TRY(_vfd.write(hzstr));
-
-
+			TRY(_vfd.write( " " + hzstr));
 		}
+		
+			time_t now = time(NULL);
+			struct tm *t = localtime(&now);
+			char buffer[16] = {0};
+			std::strftime(buffer, sizeof(buffer)-1, "%2l:%M%P", t);
+			TRY(_vfd.setFont(VFD::FONT_5x7));
+			TRY(_vfd.setCursor(_vfd.width() - (strlen(buffer) * 6) ,7));
+			TRY(_vfd.write(buffer));
+
+		
 	} catch (...) {
 		// ignore fail
 	}
