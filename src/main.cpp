@@ -92,7 +92,7 @@ bool RadioDataSource::getIntForKey(string_view key,  int &result){
 		RadioMgr*	radio = RadioMgr::shared();
 		result = radio->radioMode();
 		return  true;
- 	}
+	}
  
 	return false;
 }
@@ -175,8 +175,10 @@ int main(int argc, const char * argv[]) {
 		// dim button down
 		twist.setColor(0, 8, 0);
 		
-	//	radio->setFrequency(1440e3);
-		radio->setFrequency(88.1e6);
+	 //	radio->setFrequency(1440e3);
+	 //	radio->setFrequency(88.1e6);
+	  radio->setFrequency(155.610e6);
+	
 		radio->setRadioMode(RadioMgr::RADIO_OFF);
 		
 		while(true){
@@ -202,7 +204,7 @@ int main(int argc, const char * argv[]) {
 					radio->setRadioMode(RadioMgr::RADIO_OFF);
 				}
 				else {
-					radio->setRadioMode(RadioMgr::BROADCAST_FM);
+					radio->setRadioMode(RadioMgr::VHF);
 				}
 				display->showRadioChange();
 				

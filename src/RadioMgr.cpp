@@ -38,11 +38,11 @@ string RadioMgr::modeString(radio_mode_t mode){
 	string str = "  ";
 	switch (mode) {
 		case BROADCAST_AM:
-			str = "AM ";
+			str = "AM";
 			break;
 			
 		case BROADCAST_FM:
-			str = "FM ";
+			str = "FM";
 			break;
 			
 		case VHF:
@@ -52,7 +52,6 @@ string RadioMgr::modeString(radio_mode_t mode){
 		default: ;
 	}
  
-	
 	return str;
 }
 
@@ -98,6 +97,12 @@ double RadioMgr::nextFrequency(bool up){
 		break;
 
 		default:
+			if(up) {
+				newfreq+=1.e3;
+			}
+			else {
+				newfreq-=1.e3;
+			}
 			break;
 	}
 	return newfreq;

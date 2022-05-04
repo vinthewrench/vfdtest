@@ -477,17 +477,26 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 			
 			string str = 	RadioMgr::hertz_to_string(freq, precision);
 			string hzstr =	RadioMgr::freqSuffixString(freq);
-			string modStr = RadioMgr::freqSuffixString(mode);
+			string modStr = RadioMgr::modeString(mode);
 			
-			TRY(_vfd.setFont(VFD::FONT_5x7));
-			TRY(_vfd.setCursor(0, centerY+5));
-			TRY(_vfd.write(modStr));
- 
-			auto freqCenter =  centerX - (str.size() * 10) + 10;
+			auto freqCenter =  centerX - (str.size() * 11) + 18;
+			if(precision > 1)  freqCenter += 10*2;
 
+			auto modeStart = 5;
+			if(precision == 0)
+				modeStart += 15;
+			else if  (precision == 1)
+				modeStart += 5;
+			 
+
+			TRY(_vfd.setFont(VFD::FONT_5x7));
+			TRY(_vfd.setCursor(modeStart, centerY+3));
+			TRY(_vfd.write(modStr));
+			
 			TRY(_vfd.setFont(VFD::FONT_10x14));
 			TRY(_vfd.setCursor( freqCenter ,centerY+5));
 			TRY(_vfd.write(str));
+
 			TRY(_vfd.setFont(VFD::FONT_5x7));
 			TRY(_vfd.write( " " + hzstr));
 		}
