@@ -28,14 +28,6 @@ constexpr string_view DS_KEY_RADIO_VOLUME	= "vol";
 constexpr string_view DS_KEY_RADIO_FREQ	= "freq";
 constexpr string_view DS_KEY_MODULATION_MODE	= "mode";
 
-typedef enum :int {
-	MM_UNKNOWN = 0,
-	MM_BROADCAST_AM,
-	MM_BROADCAST_FM,
-	MM_FM,
-
-}modulation_mode_t;
-
 
 class DisplayDataSource {
 public:
@@ -107,7 +99,8 @@ private:
 	mode_state_t _current_mode = MODE_UNKNOWN;
 	mode_state_t _saved_mode   = MODE_UNKNOWN;
 	timeval		_lastEventTime = {0,0};
-	
+ 
+	mode_state_t handleRadioEvent();
 	bool isStickyMode(mode_state_t);
 	bool pushMode(mode_state_t);
 	void popMode();

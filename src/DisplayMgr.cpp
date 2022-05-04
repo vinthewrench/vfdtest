@@ -14,34 +14,12 @@
 #include <stdlib.h>
 #include <cmath>
 
+#include "RadioMgr.hpp"
+
 #define TRY(_statement_) if(!(_statement_)) { \
 printf("FAIL AT line: %d\n", __LINE__ ); \
 }
-
-std::string  freq_string(double hz){
-	
- 	if(hz >= 2.0e6) { // Mhz
-		return "Mhz";
-	} else if(hz >= 1.0e3) {
-		return "Khz";
-	}
-	
-	return "";
-}
-
-std::string  hertz_to_string(double hz, int precision = 1){
-	
-	char buffer[128] = {0};
  
-	if(hz >= 2.0e6) { // Mhz
-		sprintf(buffer, "%0.*f", precision, hz/1.0e6);
-	} else if(hz >= 1.0e3) {
-		sprintf(buffer, "%d", (int)round( hz/1.0e3));
-	}
-	
-	return string(buffer);
-}
-
 DisplayMgr *DisplayMgr::sharedInstance = NULL;
 
 typedef void * (*THREADFUNCPTR)(void *);
@@ -162,6 +140,7 @@ bool DisplayMgr::isStickyMode(mode_state_t md){
 	
 	switch(md){
 		case MODE_TIME:
+		case MODE_RADIO:
 		case MODE_DIAG:
 			isSticky = true;
 			break;
@@ -230,7 +209,7 @@ void DisplayMgr::DisplayUpdate(){
 			_event &= ~DISPLAY_EVENT_VOLUME;
 		}
 		else if((_event & DISPLAY_EVENT_RADIO ) != 0){
-			newMode = MODE_RADIO;
+			newMode = handleRadioEvent();
 			_event &= ~DISPLAY_EVENT_RADIO;
 		}
 		else if((_event & DISPLAY_EVENT_TIME ) != 0){
@@ -280,6 +259,28 @@ void DisplayMgr::DisplayUpdate(){
 	}
 	
 }
+
+DisplayMgr::mode_state_t DisplayMgr::handleRadioEvent(){
+	mode_state_t newState = MODE_UNKNOWN;
+	
+	int temp;
+	
+	if(_dataSource
+		&& _dataSource->getIntForKey(DS_KEY_MODULATION_MODE, temp)
+		){
+			RadioMgr::radio_mode_t newMode = (RadioMgr::radio_mode_t) temp;
+
+		if(newMode == RadioMgr::RADIO_OFF){
+			newState = MODE_TIME;
+		}else {
+			newState = MODE_RADIO;
+		}
+	}
+	
+	return newState;
+		
+}
+
 
 void* DisplayMgr::DisplayUpdateThread(void *context){
 	DisplayMgr* d = (DisplayMgr*)context;
@@ -457,24 +458,24 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 		
 		double freq = 0;
 		int temp;
-		
-
+	 
 		if(_dataSource
 			&& _dataSource->getDoubleForKey(DS_KEY_RADIO_FREQ, freq)
 			&& _dataSource->getIntForKey(DS_KEY_MODULATION_MODE, temp)
 			){
-				modulation_mode_t mode = (modulation_mode_t) temp;
+				RadioMgr::radio_mode_t mode = (RadioMgr::radio_mode_t) temp;
 				
 			int precision = 0;
 			switch (mode) {
-				case MM_BROADCAST_AM: precision = 0;break;
-				case MM_BROADCAST_FM: precision = 1;break;
-				case MM_FM: precision = 3; break;
-				default :;
+				case RadioMgr::BROADCAST_AM: precision = 0;break;
+				case RadioMgr::BROADCAST_FM: precision = 1;break;
+				default :
+					precision = 3; break;
+
 				}
 			
-			string str = hertz_to_string(freq, precision);
-			string hzstr = freq_string(freq);
+			string str =  RadioMgr::hertz_to_string(freq, precision);
+			string hzstr =  RadioMgr::freqSuffixString(freq);
 
 			TRY(_vfd.setCursor(10,35));
 			TRY(_vfd.setFont(VFD::FONT_10x14));

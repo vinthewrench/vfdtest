@@ -24,6 +24,7 @@
 
 
 #include "DisplayMgr.hpp"
+#include "RadioMgr.hpp"
 #include "TMP117.hpp"
 #include "QwiicTwist.hpp"
 
@@ -88,8 +89,9 @@ bool RadioDataSource::getIntForKey(string_view key,  int &result){
 	
 	if(key == DS_KEY_MODULATION_MODE){
 	 
-		result = MM_BROADCAST_AM;
-			return  true;
+		RadioMgr*	radio = RadioMgr::shared();
+		result = radio->radioMode();
+		return  true;
  	}
  
 	return false;
@@ -100,9 +102,9 @@ bool RadioDataSource::getIntForKey(string_view key,  int &result){
 bool RadioDataSource::getDoubleForKey(string_view key,  double &result){
 	
 	if(key == DS_KEY_RADIO_FREQ){
-	 
-			result = 1440 * 1.0e3;
-			return  true;
+		RadioMgr*	radio = RadioMgr::shared();
+		result = radio->frequency();
+		return  true;
 		 
 	}
  
@@ -148,8 +150,8 @@ bool RadioDataSource::getFloatForKey(string_view key,  float &result){
 
 int main(int argc, const char * argv[]) {
 	
-	
-	DisplayMgr display;
+	DisplayMgr*	display 	= DisplayMgr::shared();
+	RadioMgr*	radio 	= RadioMgr::shared();
 	TMP117 		tmp117;
 	QwiicTwist	twist;
 	
@@ -157,12 +159,12 @@ int main(int argc, const char * argv[]) {
 
 	try {
 		
-		if(!display.begin("/dev/ttyUSB0",B9600))
+		if(!display->begin("/dev/ttyUSB0",B9600))
 			throw Exception("failed to setup Display ");
 		
-		display.setDataSource(&source);
+		display->setDataSource(&source);
 		
-		if(!display.setBrightness(7))
+		if(!display->setBrightness(7))
 			throw Exception("failed to set brightness ");
 		
 		if(!tmp117.begin(0x4A))
@@ -173,132 +175,36 @@ int main(int argc, const char * argv[]) {
 		
 		// dim button down
 		twist.setColor(0, 8, 0);
-#define TRY(_statement_) if(!(_statement_)) { \
-printf("FAIL AT line: %d\n", __LINE__ ); \
-}
-		 		while(true){
+		
+		radio->setFrequency(1440 * 1.0e3);
+		radio->setRadioMode(RadioMgr::RADIO_OFF);
+	
+		while(true){
 			bool clicked = false;
 			bool moved = false;
-			//
 			
 			
 			twist.isMoved(moved);
 			if(moved){
-				display.showVolumeChange();
+				display->showVolumeChange();
 			}
 			
 			if(twist.isClicked(clicked) && clicked) {
-	 				display.showRadioChange();
+				
+				if(radio->radioMode() != RadioMgr::RADIO_OFF){
+					radio->setRadioMode(RadioMgr::RADIO_OFF);
+				}
+				else {
+					radio->setRadioMode(RadioMgr::BROADCAST_AM);
+				}
+				display->showRadioChange();
 	 
 			}
 			
 			usleep(1);
 		};
 		
-		
-		
-		//
-		//		// const uint8_t* msg = (uint8_t*) "\x1B\x00\x25\x1D\x10\x15\x1FPLEASE WAIT\x10\x07\x29Initializing System";
-		//		// vfd.writePacket(msg, 40, 10000);
-		//		// sleep(1);
-		//
-		//		while(true){
-		//
-		//			struct timeval begin, end;
-		//			gettimeofday(&begin, 0);
-		//
-		//			char buffer[128] = {0};
-		//
-		//			time_t now = time(NULL);
-		//			struct tm *t = localtime(&now);
-		//			double cpuTemp = 0;
-		//			double lastCPUtemp = 0;
-		//
-		//			float temp;
-		//			bool moved = false;
-		//			bool clicked = false;
-		//
-		//			std::strftime(buffer, sizeof(buffer)-1, "%l:%M:%S%P", t);
-		//			//
-		//			tmp117.readTempF(temp);
-		//			getCPUTemp(cpuTemp);
-		//
-		//			twist.isMoved(moved);
-		//			if(moved){
-		//
-		//				int16_t twistCount = 0;
-		//				if(twist.getDiff(twistCount, true)) {
-		//					int newLevel = dimLevel + twistCount;
-		//					if(newLevel > 7) newLevel = 7;
-		//					if(newLevel < 0) newLevel = 0;
-		//					dimLevel = newLevel;
-		//
-		//					TRY(vfd.setBrightness(dimLevel));
-		//					twist.setColor(0, dimLevel << 5, 0);
-		//				}
-		//			}
-		//
-		//			TRY(vfd.setCursor(10,14));
-		//			TRY(vfd.setFont(VFD::FONT_10x14));
-		//			TRY(vfd.write(buffer));
-		//
-		//			TRY(vfd.setCursor(10, 25));
-		//			TRY(vfd.setFont(VFD::FONT_5x7));
-		//			sprintf(buffer, "%3d\xA0\x46", (int) round(temp) );
-		//			TRY(vfd.write(buffer));
-		//
-		//			if(fabs(cpuTemp - lastCPUtemp) > 1.0) {
-		//				TRY(vfd.setCursor(65, 25));
-		//				//TRY(vfd.setFont(VFD::FONT_5x7));
-		//				sprintf(buffer, "CPU:%3d\xA0\x43", (int) round(cpuTemp) );
-		//				TRY(vfd.write(buffer));
-		//			}
-		//			lastCPUtemp = cpuTemp;
-		//			//	usleep(100);
-		//
-		//			//			TRY(vfd.setCursor(10, 35));
-		//			//			TRY(vfd.setFont(VFD::FONT_5x7));
-		//			//			sprintf(buffer, "Pwr: %-2.2fV", vIn);
-		//			//			TRY(vfd.write(buffer));
-		//			//			usleep(100);
-		//			//
-		//			//			TRY(vfd.setCursor(70, 35));
-		//			//			TRY(vfd.setFont(VFD::FONT_5x7));
-		//			//			sprintf(buffer, "  %-2.2fA  ", iOut);
-		//			//			TRY(vfd.write(buffer));
-		//			//	usleep(100);
-		//
-		//			TRY(vfd.setCursor(10, 45));
-		//			TRY(vfd.setFont(VFD::FONT_5x7));
-		//			sprintf(buffer, "Dim: %d ", dimLevel);
-		//			TRY(vfd.write(buffer));
-		//			//	usleep(100);
-		//
-		//
-		//			//			vfd.setCursor(10, 60);
-		//			//			vfd.setFont(VFD::FONT_5x7);
-		//			//			sprintf(buffer, "Batt: %-2.2fV", vBatt);
-		//			//			vfd.write(buffer);
-		//
-		//			if(twist.isClicked(clicked) && clicked) break;
-		//
-		//			//usleep(500);
-		//
-		//
-		//			gettimeofday(&end, 0);
-		//			long seconds = end.tv_sec - begin.tv_sec;
-		//			long microseconds = end.tv_usec - begin.tv_usec;
-		//			double elapsed = seconds + microseconds*1e-6;
-		//			if(elapsed > 1.0)
-		//				printf(" %.3f seconds\n", elapsed);
-		//
-		//		}
-		//		vfd.reset();
-		//		vfd.reset();
-		//		vfd.stop();
-		//		//	twist.setColor(0, 0, 0);
-		//
-		//
+
 	}
 	catch ( const Exception& e)  {
 		printf("\tError %d %s\n\n", e.getErrorNumber(), e.what());
