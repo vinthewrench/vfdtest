@@ -466,7 +466,8 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 				RadioMgr::radio_mode_t mode = (RadioMgr::radio_mode_t) temp;
 				
 			int precision = 0;
-			int centerX = _vfd.width() >>1;
+			int centerX = _vfd.width() /2;
+			int centerY = _vfd.height() /2;
 			
 			switch (mode) {
 				case RadioMgr::BROADCAST_AM: precision = 0;break;
@@ -479,10 +480,11 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 			string str =  RadioMgr::hertz_to_string(freq, precision);
 			string hzstr =  RadioMgr::freqSuffixString(freq);
 
+			
 			TRY(_vfd.setFont(VFD::FONT_10x14));
 			
-			TRY(_vfd.setCursor(10,35));
-		TRY(_vfd.write(str));
+			TRY(_vfd.setCursor( centerX - (str.size() /2)  ,centerY - 5));
+			TRY(_vfd.write(str));
 			TRY(_vfd.setFont(VFD::FONT_5x7));
 			TRY(_vfd.write(hzstr));
 
