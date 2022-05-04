@@ -26,15 +26,40 @@ bool RadioMgr::setRadioMode(radio_mode_t newMode){
 }
 
 bool RadioMgr::setFrequency(double newFreq){
-	_frequency = newFreq;
-	return true;
+	if(newFreq != _frequency){
+		_frequency = newFreq;
+		return true;
+	}
+	return false;
 }
  
-
-
-std::string  RadioMgr::freqSuffixString(double hz){
+string RadioMgr::modeString(radio_mode_t mode){
+ 
+	string str = "  ";
+	switch (mode) {
+		case BROADCAST_AM:
+			str = "AM ";
+			break;
+			
+		case BROADCAST_FM:
+			str = "FM ";
+			break;
+			
+		case VHF:
+			str = "VHF";
+			break;
+			
+		default: ;
+	}
+ 
 	
-	if(hz >= 1.615e6) { // Mhz
+	return str;
+}
+
+
+string  RadioMgr::freqSuffixString(double hz){
+	
+	if(hz > 1710e3) { // Mhz
 		return "Mhz";
 	} else if(hz >= 1.0e3) {
 		return "Khz";
@@ -54,10 +79,10 @@ double RadioMgr::nextFrequency(bool up){
 				newfreq+=10.e3;
 			}
 			else {
-				newfreq+=10.e3;
- 			}
-			if(newfreq > 1605e3) newfreq =1605e3;
-			else if(newfreq < 535e3) newfreq =535e3;
+				newfreq-=10.e3;
+			}
+			if(newfreq > 1710e3) newfreq =1710e3;
+			else if(newfreq < 530e3) newfreq =530e3;
 		break;
 	
 		case BROADCAST_FM:
@@ -66,7 +91,7 @@ double RadioMgr::nextFrequency(bool up){
 				newfreq+=200.e3;
 			}
 			else {
-				newfreq+=200.e3;
+				newfreq-=200.e3;
 			}
 			if(newfreq > 108.e6) newfreq = 108.e6;
 			else if(newfreq < 88.1e6) newfreq =88.1e6;
@@ -78,11 +103,11 @@ double RadioMgr::nextFrequency(bool up){
 	return newfreq;
 }
 
- std::string  RadioMgr::hertz_to_string(double hz, int precision){
+string  RadioMgr::hertz_to_string(double hz, int precision){
 	
 	char buffer[128] = {0};
  
-	if(hz >= 1.615e6) { // Mhz
+	if(hz > 1710e3) { // Mhz
 		sprintf(buffer, "%3.*f", precision, hz/1.0e6);
 	} else if(hz >= 1.0e3) {
 		sprintf(buffer, "%4d", (int)round( hz/1.0e3));

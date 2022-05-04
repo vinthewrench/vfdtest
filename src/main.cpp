@@ -97,8 +97,7 @@ bool RadioDataSource::getIntForKey(string_view key,  int &result){
 	return false;
 }
 
-
-
+ 
 bool RadioDataSource::getDoubleForKey(string_view key,  double &result){
 	
 	if(key == DS_KEY_RADIO_FREQ){
@@ -176,28 +175,25 @@ int main(int argc, const char * argv[]) {
 		// dim button down
 		twist.setColor(0, 8, 0);
 		
-		radio->setFrequency(1440 * 1.0e3);
+	//	radio->setFrequency(1440e3);
+		radio->setFrequency(88.1e6);
 		radio->setRadioMode(RadioMgr::RADIO_OFF);
-	
+		
 		while(true){
 			bool clicked = false;
 			bool moved = false;
-			
-			
-			twist.isMoved(moved);
-			if(moved){
- 				int16_t twistCount = 0;
-					
+ 
+			if(twist.isMoved(moved) && moved){
+				int16_t twistCount = 0;
+				
 				if(twist.getDiff(twistCount, true)) {
 					auto newfreq = radio->nextFrequency(twistCount > 0);
-					radio->setFrequency(newfreq);
-					
-					if(radio->radioMode() != RadioMgr::RADIO_OFF){
+	 
+					if(( radio->radioMode() != RadioMgr::RADIO_OFF)
+						&& radio->setFrequency(newfreq)){
 						display->showRadioChange();
 					}
 				}
-				
-					
 			}
 			
 			if(twist.isClicked(clicked) && clicked) {
@@ -206,16 +202,16 @@ int main(int argc, const char * argv[]) {
 					radio->setRadioMode(RadioMgr::RADIO_OFF);
 				}
 				else {
-					radio->setRadioMode(RadioMgr::BROADCAST_AM);
+					radio->setRadioMode(RadioMgr::BROADCAST_FM);
 				}
 				display->showRadioChange();
-	 
+				
 			}
 			
 			usleep(1);
 		};
 		
-
+		
 	}
 	catch ( const Exception& e)  {
 		printf("\tError %d %s\n\n", e.getErrorNumber(), e.what());

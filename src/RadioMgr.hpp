@@ -27,7 +27,7 @@ public:
 		RADIO_OFF = 0,
 		BROADCAST_AM,
 		BROADCAST_FM,
-		RADIO_FM,
+		VHF,
 
 	}radio_mode_t;
 
@@ -44,11 +44,11 @@ public:
 	
 	static string  freqSuffixString(double hz);
 	static string  hertz_to_string(double hz, int precision = 1);
-
+	static string modeString(radio_mode_t);
+	
 	radio_mode_t radioMode() {return _mode;};
 	bool setRadioMode(radio_mode_t );
-
-	
+ 
 	double frequency() {return _frequency;};
 	bool setFrequency(double );
 
