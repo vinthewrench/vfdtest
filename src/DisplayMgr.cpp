@@ -187,7 +187,8 @@ void DisplayMgr::DisplayUpdate(){
 	while(!shouldQuit){
 		
 		bool shouldRedraw = false;
-
+		uint16_t lastEvent;
+		
 		// --check if any events need processing else wait for a timeout
 		struct timespec ts = {0, 0};
 		clock_gettime(CLOCK_REALTIME, &ts);
@@ -196,6 +197,9 @@ void DisplayMgr::DisplayUpdate(){
 		pthread_mutex_lock (&_mutex);
 		if (_event == 0)
 			pthread_cond_timedwait(&_cond, &_mutex, &ts);
+		
+		// daved the event
+		lastEvent = _event;
 		
 		// get a new mode for the event. and reset that event bit
 		mode_state_t newMode = MODE_UNKNOWN;
@@ -255,7 +259,7 @@ void DisplayMgr::DisplayUpdate(){
 			}
 		}
 		
-		drawCurrentMode(shouldRedraw);
+		drawCurrentMode(shouldRedraw, lastEvent);
 	}
 	
 }
@@ -309,7 +313,7 @@ void DisplayMgr::DisplayUpdateThreadCleanup(void *context){
 
 // MARK: -  Display Draw code
 
-void DisplayMgr::drawCurrentMode(bool redraw){
+void DisplayMgr::drawCurrentMode(bool redraw, uint16_t event){
 	
 	if(!_isSetup)
 		return;
@@ -317,27 +321,27 @@ void DisplayMgr::drawCurrentMode(bool redraw){
 		switch (_current_mode) {
 				
 			case MODE_STARTUP:
-				drawStartupScreen(redraw);
+				drawStartupScreen(redraw,event);
 				break;
 				
 			case MODE_TIME:
-				drawTimeScreen(redraw);
+				drawTimeScreen(redraw,event);
 				break;
 				
 			case MODE_VOLUME:
-				drawVolumeScreen(redraw);
+				drawVolumeScreen(redraw,event);
 				break;
 				
 			case MODE_RADIO:
-				drawRadioScreen(redraw);
+				drawRadioScreen(redraw,event);
 				break;
 				
 			case MODE_DIAG:
-				drawDiagScreen(redraw);
+				drawDiagScreen(redraw,event);
 				
 				
 			default:
-				drawInternalError(redraw);
+				drawInternalError(redraw,event);
 		}
 		
 	}
@@ -353,7 +357,7 @@ void DisplayMgr::drawCurrentMode(bool redraw){
 }
 
 
-void DisplayMgr::drawStartupScreen(bool redraw){
+void DisplayMgr::drawStartupScreen(bool redraw, uint16_t event){
 	
  
 	if(redraw)
@@ -366,7 +370,7 @@ void DisplayMgr::drawStartupScreen(bool redraw){
 //	printf("displayStartupScreen %s\n",redraw?"REDRAW":"");
 }
 
-void DisplayMgr::drawTimeScreen(bool redraw){
+void DisplayMgr::drawTimeScreen(bool redraw, uint16_t event){
 	time_t now = time(NULL);
 	struct tm *t = localtime(&now);
 	char buffer[128] = {0};
@@ -398,7 +402,7 @@ void DisplayMgr::drawTimeScreen(bool redraw){
 		
 }
 
-void DisplayMgr::drawVolumeScreen(bool redraw){
+void DisplayMgr::drawVolumeScreen(bool redraw, uint16_t event){
 	
 	constexpr uint8_t rightbox 	= 13;
 	constexpr uint8_t leftbox 		= 112;
@@ -447,7 +451,7 @@ void DisplayMgr::drawVolumeScreen(bool redraw){
  }
 
 
-void DisplayMgr::drawRadioScreen(bool redraw){
+void DisplayMgr::drawRadioScreen(bool redraw, uint16_t event){
 //	printf("display RadioScreen %s\n",redraw?"REDRAW":"");
 
 	try{
@@ -455,59 +459,61 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 			_vfd.clearScreen();
 		}
 		
-		double freq = 0;
-		int temp, temp1;
-	 
-		if(_dataSource
-			&& _dataSource->getDoubleForKey(DS_KEY_RADIO_FREQ, freq)
-			&& _dataSource->getIntForKey(DS_KEY_MODULATION_MODE, temp)
-			&& _dataSource->getIntForKey(DS_KEY_MODULATION_MUX, temp1)
-			){
-				RadioMgr::radio_mode_t mode = (RadioMgr::radio_mode_t) temp;
-				RadioMgr::radio_mux_t mux = (RadioMgr::radio_mux_t) temp1;
+		// avoid doing a needless refresh.  if this was a timeout event,  then just update the time
+		if(event != 0) {
+			double freq = 0;
+			int temp, temp1;
+		 
+			if(_dataSource
+				&& _dataSource->getDoubleForKey(DS_KEY_RADIO_FREQ, freq)
+				&& _dataSource->getIntForKey(DS_KEY_MODULATION_MODE, temp)
+				&& _dataSource->getIntForKey(DS_KEY_MODULATION_MUX, temp1)
+				){
+					RadioMgr::radio_mode_t mode = (RadioMgr::radio_mode_t) temp;
+					RadioMgr::radio_mux_t mux = (RadioMgr::radio_mux_t) temp1;
+					
+				int precision = 0;
+				int centerX = _vfd.width() /2;
+				int centerY = _vfd.height() /2;
 				
-			int precision = 0;
-			int centerX = _vfd.width() /2;
-			int centerY = _vfd.height() /2;
-			
-			switch (mode) {
-				case RadioMgr::BROADCAST_AM: precision = 0;break;
-				case RadioMgr::BROADCAST_FM: precision = 1;break;
-				default :
-					precision = 3; break;
-				}
-			
-			string str = 	RadioMgr::hertz_to_string(freq, precision);
-			string hzstr =	RadioMgr::freqSuffixString(freq);
-			string modStr = RadioMgr::modeString(mode);
-			string muxstring = RadioMgr::muxstring(mux);
-			
-			auto freqCenter =  centerX - (str.size() * 11) + 18;
-			if(precision > 1)  freqCenter += 10*2;
+				switch (mode) {
+					case RadioMgr::BROADCAST_AM: precision = 0;break;
+					case RadioMgr::BROADCAST_FM: precision = 1;break;
+					default :
+						precision = 3; break;
+					}
+				
+				string str = 	RadioMgr::hertz_to_string(freq, precision);
+				string hzstr =	RadioMgr::freqSuffixString(freq);
+				string modStr = RadioMgr::modeString(mode);
+				string muxstring = RadioMgr::muxstring(mux);
+				
+				auto freqCenter =  centerX - (str.size() * 11) + 18;
+				if(precision > 1)  freqCenter += 10*2;
 
-			auto modeStart = 5;
-			if(precision == 0)
-				modeStart += 15;
-			else if  (precision == 1)
-				modeStart += 5;
-			 
-			TRY(_vfd.setFont(VFD::FONT_5x7));
-			TRY(_vfd.setCursor(modeStart, centerY-3));
-			TRY(_vfd.write(modStr));
-			
-			TRY(_vfd.setFont(VFD::FONT_MINI));
-			TRY(_vfd.setCursor(modeStart+3, centerY+5));
-			TRY(_vfd.write(muxstring));
-			
-			TRY(_vfd.setFont(VFD::FONT_10x14));
-			TRY(_vfd.setCursor( freqCenter ,centerY+5));
-			TRY(_vfd.write(str));
+				auto modeStart = 5;
+				if(precision == 0)
+					modeStart += 15;
+				else if  (precision == 1)
+					modeStart += 5;
+				 
+				TRY(_vfd.setFont(VFD::FONT_5x7));
+				TRY(_vfd.setCursor(modeStart, centerY-3));
+				TRY(_vfd.write(modStr));
+				
+				TRY(_vfd.setFont(VFD::FONT_MINI));
+				TRY(_vfd.setCursor(modeStart+3, centerY+5));
+				TRY(_vfd.write(muxstring));
+				
+				TRY(_vfd.setFont(VFD::FONT_10x14));
+				TRY(_vfd.setCursor( freqCenter ,centerY+5));
+				TRY(_vfd.write(str));
 
-			
-
-			TRY(_vfd.setFont(VFD::FONT_5x7));
-			TRY(_vfd.write( " " + hzstr));
+				TRY(_vfd.setFont(VFD::FONT_5x7));
+				TRY(_vfd.write( " " + hzstr));
+			}
 		}
+	
 		
 			time_t now = time(NULL);
 			struct tm *t = localtime(&now);
@@ -523,13 +529,13 @@ void DisplayMgr::drawRadioScreen(bool redraw){
 	}
 }
 
-void DisplayMgr::drawDiagScreen(bool redraw){
+void DisplayMgr::drawDiagScreen(bool redraw, uint16_t event){
 	printf("displayDiagScreen %s\n",redraw?"REDRAW":"");
 
 }
 
 
-void DisplayMgr::drawInternalError(bool redraw){
+void DisplayMgr::drawInternalError(bool redraw, uint16_t event){
 	
 	printf("displayInternalError %s\n",redraw?"REDRAW":"");
 }
